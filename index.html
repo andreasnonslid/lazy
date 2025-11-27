@@ -178,8 +178,8 @@
       </div>
 
       <div class="tab-group">
-        <button class="tab-button" data-src="timers.html">Timers</button>
-        <button class="tab-button" data-src="notes.html">Notes</button>
+        <button class="tab-button" data-src="apps/timers.html">Timers</button>
+        <button class="tab-button" data-src="apps/notes.html">Notes</button>
         <button class="tab-button" data-src="page3.html">Page 3</button>
       </div>
     </div>
@@ -189,15 +189,15 @@
     <!-- Each page has its own iframe, kept loaded all the time -->
     <iframe
       class="page-frame"
-      data-src="timers.html"
-      src="timers.html"
+      data-src="apps/timers.html"
+      src="apps/timers.html"
       title="Timers"
     ></iframe>
 
     <iframe
       class="page-frame"
-      data-src="notes.html"
-      src="notes.html"
+      data-src="apps/notes.html"
+      src="apps/notes.html"
       title="Notes"
     ></iframe>
 
@@ -263,14 +263,14 @@
 
     switchToButton(initialButton);
 
-    // Listen for alarm state messages from timers.html AND reminder state from notes.html
+    // Listen for alarm state messages from apps/timers.html AND reminder state from apps/notes.html
     window.addEventListener("message", event => {
       const data = event.data;
       if (!data || typeof data !== "object") return;
 
       // Timers: { source: "timers", type: "alarmState", anyFinished: boolean }
       if (data.source === "timers" && data.type === "alarmState") {
-        const timersBtn = buttons.find(btn => btn.dataset.src === "timers.html");
+        const timersBtn = buttons.find(btn => btn.dataset.src === "apps/timers.html");
         if (!timersBtn) return;
 
         if (data.anyFinished) {
@@ -283,7 +283,7 @@
 
       // Notes: { type: "lazy_notes_reminder_state", hasDue: boolean }
       if (data.type === "lazy_notes_reminder_state") {
-        const notesBtn = buttons.find(btn => btn.dataset.src === "notes.html");
+        const notesBtn = buttons.find(btn => btn.dataset.src === "apps/notes.html");
         if (!notesBtn) return;
 
         if (data.hasDue) {
