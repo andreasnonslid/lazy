@@ -1,7 +1,7 @@
 <!--
-Infinite Timers
+Timers
 Author: Andreas Nonslid Håvardsen
-Version: 1.3.0
+Version: 1.4.0
 Last updated: 2025-11-27
 License: MIT (see LICENSE file)
 
@@ -12,7 +12,7 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
 
 <head>
   <meta charset="UTF-8" />
-  <title>Infinite Timers</title>
+  <title>Timers</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <style>
     :root {
@@ -277,6 +277,7 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       font-size: 1.05rem;
       font-weight: 500;
       color: #f5f5f5;
+      cursor: text; /* show text caret on hover */
     }
 
     .timer-time-input {
@@ -290,6 +291,7 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       margin: 0;
       text-align: right;
       width: 10ch;
+      cursor: text;
     }
 
     .timer-time-input:focus {
@@ -335,7 +337,7 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
 
     /* Compact mode: single-line style */
     body.compact {
-      padding: 0.7rem;
+      padding: 1rem; /* keep same outer padding in compact mode */
     }
 
     body.compact .timer {
@@ -354,6 +356,7 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       gap: 0.6rem;
     }
 
+    /* Swap order: buttons then name in compact mode */
     body.compact .timer-buttons {
       order: 1;
     }
@@ -492,8 +495,8 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
 <body>
   <header class="top-bar">
     <div class="top-text">
-      <h1>Infinite Timers</h1>
-      <p>All timers are stored locally.</p>
+      <h1>Timers</h1>
+      <p>Stored locally in this browser.</p>
     </div>
     <div class="top-right">
       <div class="toggles">
@@ -637,6 +640,21 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       }
     }
 
+    // Notify parent (index.html) about alarm state for tab highlighting
+    function notifyParentAlarmState() {
+      try {
+        if (window.parent && window.parent !== window && window.parent.postMessage) {
+          const anyFinished = timers.some(t => t.remainingSec <= 0);
+          window.parent.postMessage(
+            { source: "timers", type: "alarmState", anyFinished },
+            "*"
+          );
+        }
+      } catch {
+        // Ignore cross-origin or other errors
+      }
+    }
+
     // ------- Duration parsing (style C) -------
     function parseDurationSmart(value) {
       if (!value) return 0;
@@ -714,7 +732,7 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       return `${m}:${String(s).padStart(2, "0")}`;
     }
 
-    // ------- Time editing helpers -------
+    // xhymzs format for editing
     function formatHms(sec) {
       sec = Math.max(0, Math.floor(sec));
       const h = Math.floor(sec / 3600);
@@ -723,6 +741,7 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       return `${h}h${m}m${s}s`;
     }
 
+    // ------- Time editing helpers -------
     function startTimeEdit(timer) {
       // pause this timer
       timer.isRunning = false;
@@ -809,10 +828,15 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
             alarmSpan.textContent = "🔔";
             right.insertBefore(alarmSpan, right.firstChild);
           }
+        } else {
+          row.classList.remove("finished");
+          const alarmIcon = right.querySelector(".alarm-icon");
+          if (alarmIcon) alarmIcon.remove();
         }
       });
 
       stopBeepingIfNoneFinished();
+      notifyParentAlarmState();
     }
 
     function tick() {
@@ -1038,6 +1062,7 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       });
 
       stopBeepingIfNoneFinished();
+      notifyParentAlarmState();
     }
 
     function addTimer(name, durationSec) {
@@ -1171,6 +1196,7 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       // Alt + A = new timer input (clear + focus name)
       document.addEventListener("keydown", e => {
         if (resetModalOpen) {
+          // inside modal: Enter = confirm, Esc = cancel
           if (e.key === "Enter") {
             e.preventDefault();
             confirmResetModal();

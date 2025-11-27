@@ -1,0 +1,1089 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Notes</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 1rem;
+      background: #05060a;
+      color: #f5f5f5;
+      font-family: system-ui, -apple-system, sans-serif;
+      transition: padding 0.15s ease;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    /* Top bar (aligned with timers) */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
+    }
+
+    .top-text h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.6rem;
+      letter-spacing: 0.015em;
+    }
+
+    .top-text p {
+      margin: 0;
+      color: #bbbbbb;
+      font-size: 0.9rem;
+    }
+
+    .top-right {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.4rem;
+    }
+
+    .toggles {
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .toggle {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.8rem;
+      color: #cccccc;
+      padding: 0.2rem 0.45rem;
+      border-radius: 999px;
+      border: 1px solid #2b2c3b;
+      background: #121321;
+    }
+
+    .toggle input {
+      margin: 0;
+      width: 1.1rem;
+      height: 1.1rem;
+    }
+
+    .reset-all-btn {
+      padding: 0.35rem 0.9rem;
+      border-radius: 999px;
+      border: 1px solid #b91c1c;
+      background: #7f1d1d;
+      color: #fff;
+      font-size: 0.8rem;
+      cursor: pointer;
+      transition: transform 0.05s ease, background 0.1s ease, border-color 0.1s ease;
+    }
+
+    .reset-all-btn:hover { background: #991b1b; }
+    .reset-all-btn:active { transform: scale(0.96); }
+
+    .input-error {
+      margin: 0;
+      font-size: 0.8rem;
+      color: #f97373;
+      min-height: 1em;
+      flex: 1 1 auto;
+    }
+
+    button {
+      padding: 0.45rem 0.95rem;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #1d1f2b;
+      color: #fff;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: transform 0.05s ease, background 0.1s ease, border-color 0.1s ease;
+      white-space: nowrap;
+    }
+
+    button:hover { background: #272a3a; }
+    button:active { transform: scale(0.97); }
+
+    button:focus-visible,
+    .field:focus-visible,
+    select:focus-visible,
+    .toggle input:focus-visible {
+      outline: 2px solid #38bdf8;
+      outline-offset: 2px;
+    }
+
+    .btn-primary {
+      background: #2563eb;
+      border-color: #1d4ed8;
+    }
+
+    .btn-primary:hover {
+      background: #1d4ed8;
+    }
+
+    .field {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #272727;
+      background: #101119;
+      color: #f9fafb;
+      font-size: 0.95rem;
+    }
+
+    .field::placeholder {
+      color: #6b7280;
+    }
+
+    textarea.field {
+      resize: vertical;
+      min-height: 3.2rem;
+    }
+
+    /* New note card */
+    .new-note {
+      background: radial-gradient(circle at top left, #151623, #090a11);
+      border-radius: 12px;
+      border: 1px solid #262637;
+      padding: 0.9rem 1rem 0.85rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .new-note-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      gap: 0.75rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .new-note-header h2 {
+      margin: 0;
+      font-size: 1.05rem;
+    }
+
+    .new-note-header span {
+      font-size: 0.78rem;
+      color: #9ca3af;
+      white-space: nowrap;
+    }
+
+    .new-note-body {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+    }
+
+    .new-note-footer {
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      gap: 0.75rem;
+      margin-top: 0.5rem;
+    }
+
+    /* Toolbar: search + sort */
+    .toolbar {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.6rem;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .toolbar-search {
+      flex: 1 1 220px;
+      min-width: 0;
+    }
+
+    .toolbar-sort {
+      flex: 0 0 170px;
+    }
+
+    select.field {
+      padding-right: 2rem;
+      appearance: none;
+      background-image: linear-gradient(45deg, transparent 50%, #9ca3af 50%), linear-gradient(135deg, #9ca3af 50%, transparent 50%);
+      background-position: calc(100% - 14px) 50%, calc(100% - 9px) 50%;
+      background-size: 5px 5px, 5px 5px;
+      background-repeat: no-repeat;
+    }
+
+    /* Notes list */
+    #notes {
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+      margin-top: 0.2rem;
+    }
+
+    .note {
+      background: radial-gradient(circle at top left, #1c1d2a, #090a11);
+      border: 1px solid #262637;
+      border-radius: 10px;
+      padding: 0.65rem 0.75rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.45rem;
+    }
+
+    .note.favorite {
+      border-color: #eab308;
+    }
+
+    .note.reminder-due {
+      border-color: #f97373;
+      box-shadow: 0 0 6px rgba(248, 113, 113, 0.25);
+    }
+
+    .note-main {
+      display: flex;
+      justify-content: space-between;
+      gap: 0.6rem;
+      align-items: stretch;
+      flex-wrap: wrap;
+    }
+
+    .note-left {
+      flex: 1 1 60%;
+      min-width: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+    }
+
+    .note-title {
+      font-size: 0.98rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      background: #0c0d15;
+      border: 1px solid #272727;
+      border-radius: 8px;
+      padding: 0.35rem 0.55rem;
+      color: #f9fafb;
+    }
+
+    .note-title::placeholder {
+      color: #6b7280;
+    }
+
+    .note-desc {
+      font-size: 0.92rem;
+      background: #101119;
+      border-radius: 8px;
+      border: 1px solid #272727;
+      padding: 0.4rem 0.55rem;
+      color: #e5e7eb;
+      min-height: 3rem;
+      resize: vertical;
+    }
+
+    .note-desc::placeholder {
+      color: #6b7280;
+    }
+
+    /* Inline star (used in compact mode) */
+    .note-fav-inline {
+      border: none;
+      background: transparent;
+      padding: 0;
+      margin: 0;
+      margin-right: 0.3rem;
+      cursor: pointer;
+      font-size: 0.9rem;
+      color: #e5e7eb;
+      display: none; /* only in compact mode */
+    }
+
+    .note-fav-inline:hover {
+      color: #facc15;
+    }
+
+    .note-right {
+      flex: 0 0 210px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      align-items: flex-end;
+      gap: 0.4rem;
+      font-size: 0.8rem;
+      color: #9ca3af;
+      text-align: right;
+    }
+
+    .note-meta-label {
+      color: #d1d5db;
+      font-weight: 500;
+    }
+
+    .note-meta-value {
+      color: #9ca3af;
+    }
+
+    .note-meta-block {
+      margin-bottom: 0.2rem;
+    }
+
+    .note-reminder {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-end;
+      gap: 0.15rem;
+      margin-top: 0.15rem;
+    }
+
+    .note-reminder-select {
+      padding: 0.18rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid #272727;
+      background: #0b0c14;
+      color: #e5e7eb;
+      font-size: 0.78rem;
+      cursor: pointer;
+    }
+
+    .note-reminder-select option {
+      background: #05060a;
+      color: #e5e7eb;
+    }
+
+    .note-reminder-status {
+      font-size: 0.75rem;
+      color: #9ca3af;
+    }
+
+    .note-reminder-status.due {
+      color: #f97373;
+    }
+
+    .note-actions {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.25rem;
+      justify-content: flex-end;
+    }
+
+    .note-delete-btn {
+      background: #b91c1c;
+      border-color: #991b1b;
+      font-size: 0.82rem;
+      padding: 0.32rem 0.8rem;
+    }
+
+    .note-delete-btn:hover {
+      background: #991b1b;
+    }
+
+    .note-fav-btn {
+      background: #1e293b;
+      border-color: #334155;
+      font-size: 0.82rem;
+      padding: 0.32rem 0.8rem;
+    }
+
+    .note-fav-btn:hover {
+      background: #111827;
+    }
+
+    .note-empty-state {
+      text-align: center;
+      padding: 1.2rem 0.4rem;
+      color: #9ca3af;
+      font-size: 0.9rem;
+    }
+
+    .note-empty-state span {
+      display: block;
+      margin-top: 0.25rem;
+      font-size: 0.8rem;
+      color: #6b7280;
+    }
+
+    /* Compact mode (aligned with timers philosophy) */
+    body.compact {
+      padding: 1rem;
+    }
+
+    body.compact .new-note {
+      padding: 0.7rem 0.8rem;
+      margin-bottom: 0.6rem;
+    }
+
+    body.compact .new-note-header h2 {
+      font-size: 0.95rem;
+    }
+
+    body.compact .new-note-header span {
+      font-size: 0.72rem;
+    }
+
+    body.compact .field {
+      font-size: 0.9rem;
+      padding: 0.35rem 0.5rem;
+    }
+
+    body.compact .toolbar {
+      margin-bottom: 0.4rem;
+      gap: 0.45rem;
+    }
+
+    body.compact .note {
+      padding: 0.45rem 0.6rem;
+      gap: 0.3rem;
+    }
+
+    body.compact .note-main {
+      flex-wrap: nowrap;
+      align-items: center;
+    }
+
+    body.compact .note-left {
+      flex-direction: row;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    body.compact .note-fav-inline {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    body.compact .note-title {
+      font-size: 0.9rem;
+      padding: 0.3rem 0.5rem;
+      flex: 1 1 auto;
+    }
+
+    body.compact .note-desc {
+      display: none;
+    }
+
+    body.compact .note-right {
+      flex: 0 0 auto;
+      align-items: flex-end;
+      gap: 0.25rem;
+    }
+
+    body.compact .note-meta-label {
+      display: none;
+    }
+
+    body.compact .note-meta-value {
+      font-size: 0.78rem;
+    }
+
+    body.compact .note-reminder-select {
+      padding: 0.15rem 0.6rem;
+      font-size: 0.74rem;
+    }
+
+    body.compact .note-reminder-status {
+      display: none;
+    }
+
+    body.compact .note-delete-btn,
+    body.compact .note-fav-btn {
+      padding: 0.25rem 0.45rem;
+      font-size: 0.8rem;
+    }
+
+    body.compact .note-actions {
+      flex-wrap: nowrap;
+    }
+
+    /* Hide the big Favorite button in compact mode; we use inline star instead */
+    body.compact .note-fav-btn {
+      display: none;
+    }
+
+    /* Match timers: shrink the top red button in compact mode */
+    body.compact .reset-all-btn {
+      padding: 0.3rem 0.75rem;
+      font-size: 0.75rem;
+    }
+
+    @media (max-width: 640px) {
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .top-right {
+        align-items: flex-start;
+      }
+
+      .new-note-header {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+
+      .note-right {
+        flex-basis: 100%;
+        align-items: flex-start;
+        text-align: left;
+      }
+
+      .note-actions {
+        justify-content: flex-start;
+      }
+
+      .note-reminder {
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="top-bar">
+      <div class="top-text">
+        <h1>Notes</h1>
+        <p>Stored locally in this browser. Notes are kept between visits.</p>
+      </div>
+      <div class="top-right">
+        <div class="toggles">
+          <label class="toggle">
+            <input type="checkbox" id="compactToggle">
+            <span>Compact</span>
+          </label>
+        </div>
+        <button id="deleteOthersBtn" class="reset-all-btn" type="button">
+          Delete non-favorites
+        </button>
+      </div>
+    </header>
+
+    <!-- New note card -->
+    <section class="new-note">
+      <div class="new-note-header">
+        <h2>New note</h2>
+        <span>Enter adds the note. Ctrl+Enter adds line breaks.</span>
+      </div>
+
+      <div class="new-note-body">
+        <input
+          id="titleInput"
+          class="field"
+          type="text"
+          placeholder="Note title"
+          aria-label="Note title"
+        >
+        <textarea
+          id="descInput"
+          class="field"
+          rows="3"
+          placeholder="Write your note…"
+          aria-label="Note description"
+        ></textarea>
+      </div>
+
+      <div class="new-note-footer">
+        <p id="noteError" class="input-error"></p>
+        <button id="addNoteBtn" class="btn-primary" type="button">+ Add note</button>
+      </div>
+    </section>
+
+    <!-- Toolbar -->
+    <section class="toolbar">
+      <div class="toolbar-search">
+        <input
+          id="searchInput"
+          class="field"
+          type="search"
+          placeholder="Search notes (title + description)…"
+          aria-label="Search notes"
+        >
+      </div>
+
+      <div class="toolbar-sort">
+        <select
+          id="sortSelect"
+          class="field"
+          aria-label="Sort by added time"
+        >
+          <option value="newest">Newest first</option>
+          <option value="oldest">Oldest first</option>
+        </select>
+      </div>
+    </section>
+
+    <!-- Notes list -->
+    <section aria-label="Notes">
+      <div id="notes"></div>
+    </section>
+  </div>
+
+  <script>
+    const STORAGE_KEY = "lazy_notes_v1";
+    const SETTINGS_KEY = "lazy_notes_settings_v1";
+
+    let notes = [];
+    let sortOrder = "newest"; // "newest" | "oldest"
+    let searchQuery = "";
+    let compactEnabled = false;
+
+    // ------- Settings -------
+    function loadSettings() {
+      const raw = localStorage.getItem(SETTINGS_KEY);
+      if (!raw) return;
+      try {
+        const s = JSON.parse(raw);
+        compactEnabled = !!s.compactEnabled;
+      } catch {}
+    }
+
+    function saveSettings() {
+      localStorage.setItem(
+        SETTINGS_KEY,
+        JSON.stringify({ compactEnabled })
+      );
+    }
+
+    function applySettingsToUI() {
+      const compactToggle = document.getElementById("compactToggle");
+      if (compactToggle) compactToggle.checked = compactEnabled;
+      document.body.classList.toggle("compact", compactEnabled);
+    }
+
+    // ------- Storage -------
+    function loadNotes() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        return parsed.map(n => ({
+          id: n.id || (Date.now().toString(36) + Math.random().toString(16).slice(2)),
+          title: n.title || "",
+          description: n.description || "",
+          createdAt: typeof n.createdAt === "number" ? n.createdAt : Date.now(),
+          favorite: !!n.favorite,
+          remindAt: typeof n.remindAt === "number" ? n.remindAt : null,
+          remindPreset:
+            n.remindPreset === "1d" ||
+            n.remindPreset === "3d" ||
+            n.remindPreset === "7d"
+              ? n.remindPreset
+              : "none"
+        }));
+      } catch {
+        return [];
+      }
+    }
+
+    function saveNotes() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(notes));
+    }
+
+    // ------- Helpers -------
+    function normalizeText(s) {
+      return (s || "").toLowerCase();
+    }
+
+    function matchesSearch(note, query) {
+      if (!query) return true;
+      const haystack = normalizeText(note.title + " " + note.description);
+      const needle = normalizeText(query);
+      return haystack.includes(needle);
+    }
+
+    function formatDateTime(ts) {
+      const d = new Date(ts);
+      return d.toLocaleString();
+    }
+
+    function insertTextAtCursor(textarea, text) {
+      const start = textarea.selectionStart;
+      const end = textarea.selectionEnd;
+      const value = textarea.value;
+      textarea.value = value.slice(0, start) + text + value.slice(end);
+      const pos = start + text.length;
+      textarea.selectionStart = textarea.selectionEnd = pos;
+      textarea.dispatchEvent(new Event("input", { bubbles: true }));
+    }
+
+    function getReminderInfo(note) {
+      if (!note.remindAt || note.remindPreset === "none") {
+        return { label: "No reminder set", isDue: false };
+      }
+
+      const now = Date.now();
+      const diff = note.remindAt - now;
+      const abs = Math.abs(diff);
+
+      const minute = 60 * 1000;
+      const hour = 60 * minute;
+      const day = 24 * hour;
+
+      let unitLabel;
+      let value;
+
+      if (abs < minute) {
+        unitLabel = "just now";
+      } else if (abs < hour) {
+        value = Math.round(abs / minute);
+        unitLabel = value + " min" + (value === 1 ? "" : "s");
+      } else if (abs < day) {
+        value = Math.round(abs / hour);
+        unitLabel = value + " hour" + (value === 1 ? "" : "s");
+      } else {
+        value = Math.round(abs / day);
+        unitLabel = value + " day" + (value === 1 ? "" : "s");
+      }
+
+      let label;
+      if (abs < minute) {
+        label = "Reminder now";
+      } else if (diff > 0) {
+        label = "In " + unitLabel;
+      } else {
+        label = unitLabel + " ago";
+      }
+
+      return {
+        label: "Reminder: " + label,
+        isDue: diff <= 0
+      };
+    }
+
+    function notifyParentReminderState() {
+      if (!window.parent || window.parent === window) return;
+      const hasDue = notes.some(n => getReminderInfo(n).isDue);
+      try {
+        window.parent.postMessage(
+          { type: "lazy_notes_reminder_state", hasDue },
+          "*"
+        );
+      } catch {}
+    }
+
+    // ------- Render -------
+    function renderNotes() {
+      const container = document.getElementById("notes");
+      container.innerHTML = "";
+
+      let list = notes.slice();
+      list = list.filter(n => matchesSearch(n, searchQuery));
+
+      list.sort((a, b) => {
+        if (sortOrder === "newest") return b.createdAt - a.createdAt;
+        return a.createdAt - b.createdAt;
+      });
+
+      if (list.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "note-empty-state";
+        empty.innerHTML = `
+          No notes yet.
+          <span>Type a title or description above, then hit “Add note” or press Enter.</span>
+        `;
+        container.appendChild(empty);
+        notifyParentReminderState();
+        return;
+      }
+
+      list.forEach(note => {
+        const card = document.createElement("article");
+        card.className = "note";
+        card.dataset.noteId = note.id;
+
+        if (note.favorite) {
+          card.classList.add("favorite");
+        }
+
+        const reminderInfo = getReminderInfo(note);
+        if (reminderInfo.isDue) {
+          card.classList.add("reminder-due");
+        }
+
+        const main = document.createElement("div");
+        main.className = "note-main";
+
+        const left = document.createElement("div");
+        left.className = "note-left";
+
+        // Inline star (compact mode)
+        const favInline = document.createElement("button");
+        favInline.type = "button";
+        favInline.className = "note-fav-inline";
+        favInline.textContent = note.favorite ? "★" : "☆";
+        favInline.title = note.favorite ? "Unfavorite note" : "Mark note as favorite";
+        favInline.addEventListener("click", () => {
+          note.favorite = !note.favorite;
+          saveNotes();
+          renderNotes();
+        });
+
+        const titleInput = document.createElement("input");
+        titleInput.type = "text";
+        titleInput.className = "note-title";
+        titleInput.value = note.title;
+        titleInput.placeholder = "Note title";
+
+        titleInput.addEventListener("input", () => {
+          note.title = titleInput.value;
+          saveNotes();
+        });
+
+        const descArea = document.createElement("textarea");
+        descArea.className = "note-desc";
+        descArea.rows = 3;
+        descArea.value = note.description;
+        descArea.placeholder = "Note description…";
+
+        descArea.addEventListener("input", () => {
+          note.description = descArea.value;
+          saveNotes();
+        });
+
+        left.appendChild(favInline);
+        left.appendChild(titleInput);
+        left.appendChild(descArea);
+
+        const right = document.createElement("div");
+        right.className = "note-right";
+
+        const metaBlock = document.createElement("div");
+        metaBlock.className = "note-meta-block";
+
+        const label = document.createElement("div");
+        label.className = "note-meta-label";
+        label.textContent = "Added";
+        const value = document.createElement("div");
+        value.className = "note-meta-value";
+        value.textContent = formatDateTime(note.createdAt);
+
+        metaBlock.appendChild(label);
+        metaBlock.appendChild(value);
+
+        // Reminder controls
+        const reminderBlock = document.createElement("div");
+        reminderBlock.className = "note-reminder";
+
+        const reminderSelect = document.createElement("select");
+        reminderSelect.className = "note-reminder-select";
+        reminderSelect.setAttribute("aria-label", "Reminder");
+
+        [
+          { value: "none", label: "No reminder" },
+          { value: "1d", label: "In 1 day" },
+          { value: "3d", label: "In 3 days" },
+          { value: "7d", label: "In 7 days" }
+        ].forEach(opt => {
+          const o = document.createElement("option");
+          o.value = opt.value;
+          o.textContent = opt.label;
+          reminderSelect.appendChild(o);
+        });
+
+        reminderSelect.value = note.remindPreset || "none";
+
+        reminderSelect.addEventListener("change", () => {
+          const v = reminderSelect.value;
+          note.remindPreset = v;
+          if (v === "none") {
+            note.remindAt = null;
+          } else {
+            const days = parseInt(v, 10) || 0;
+            note.remindAt = Date.now() + days * 24 * 60 * 60 * 1000;
+          }
+          saveNotes();
+          renderNotes();
+        });
+
+        const reminderStatus = document.createElement("div");
+        reminderStatus.className = "note-reminder-status";
+        reminderStatus.textContent = reminderInfo.label;
+        if (reminderInfo.isDue) {
+          reminderStatus.classList.add("due");
+        }
+
+        reminderBlock.appendChild(reminderSelect);
+        reminderBlock.appendChild(reminderStatus);
+        metaBlock.appendChild(reminderBlock);
+
+        // Actions
+        const actions = document.createElement("div");
+        actions.className = "note-actions";
+
+        const favBtn = document.createElement("button");
+        favBtn.className = "note-fav-btn";
+        favBtn.type = "button";
+        favBtn.textContent = note.favorite ? "★ Favorite" : "☆ Favorite";
+        favBtn.title = note.favorite ? "Unfavorite note" : "Mark note as favorite";
+
+        favBtn.addEventListener("click", () => {
+          note.favorite = !note.favorite;
+          saveNotes();
+          renderNotes();
+        });
+
+        const deleteBtn = document.createElement("button");
+        deleteBtn.className = "note-delete-btn";
+        deleteBtn.type = "button";
+        deleteBtn.textContent = "🗑 Delete";
+
+        deleteBtn.addEventListener("click", () => {
+          notes = notes.filter(n => n.id !== note.id);
+          saveNotes();
+          renderNotes();
+        });
+
+        actions.appendChild(favBtn);
+        actions.appendChild(deleteBtn);
+
+        right.appendChild(metaBlock);
+        right.appendChild(actions);
+
+        main.appendChild(left);
+        main.appendChild(right);
+        card.appendChild(main);
+        container.appendChild(card);
+      });
+
+      notifyParentReminderState();
+    }
+
+    // ------- Add note -------
+    function handleAddNote() {
+      const titleInput = document.getElementById("titleInput");
+      const descInput = document.getElementById("descInput");
+      const errorEl = document.getElementById("noteError");
+
+      const title = (titleInput.value || "").trim();
+      const desc = (descInput.value || "").trim();
+
+      if (!title && !desc) {
+        if (errorEl) errorEl.textContent = "Write a title or description before adding.";
+        (titleInput || descInput).focus();
+        return;
+      }
+
+      if (errorEl) errorEl.textContent = "";
+
+      const now = Date.now();
+      notes.push({
+        id: now.toString(36) + Math.random().toString(16).slice(2),
+        title,
+        description: desc,
+        createdAt: now,
+        favorite: false,
+        remindAt: null,
+        remindPreset: "none"
+      });
+
+      saveNotes();
+      renderNotes();
+
+      titleInput.value = "";
+      descInput.value = "";
+      titleInput.focus();
+    }
+
+    // ------- Wiring -------
+    function wireControls() {
+      const addBtn = document.getElementById("addNoteBtn");
+      const titleInput = document.getElementById("titleInput");
+      const descInput = document.getElementById("descInput");
+      const searchInput = document.getElementById("searchInput");
+      const sortSelect = document.getElementById("sortSelect");
+      const errorEl = document.getElementById("noteError");
+      const compactToggle = document.getElementById("compactToggle");
+      const deleteOthersBtn = document.getElementById("deleteOthersBtn");
+
+      if (addBtn) {
+        addBtn.addEventListener("click", handleAddNote);
+      }
+
+      if (titleInput) {
+        titleInput.addEventListener("keydown", e => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+            descInput.focus();
+            descInput.select();
+          }
+        });
+      }
+
+      if (descInput) {
+        descInput.addEventListener("keydown", e => {
+          if (e.key === "Enter" && e.ctrlKey) {
+            e.preventDefault();
+            insertTextAtCursor(descInput, "\n");
+            return;
+          }
+
+          if (
+            e.key === "Enter" &&
+            !e.ctrlKey &&
+            !e.metaKey &&
+            !e.shiftKey &&
+            !e.altKey
+          ) {
+            e.preventDefault();
+            handleAddNote();
+          }
+        });
+      }
+
+      if (searchInput) {
+        searchInput.addEventListener("input", () => {
+          searchQuery = searchInput.value || "";
+          renderNotes();
+        });
+      }
+
+      if (sortSelect) {
+        sortSelect.addEventListener("change", () => {
+          sortOrder = sortSelect.value === "oldest" ? "oldest" : "newest";
+          renderNotes();
+        });
+      }
+
+      [titleInput, descInput].forEach(el => {
+        if (!el) return;
+        el.addEventListener("input", () => {
+          if (errorEl && errorEl.textContent) errorEl.textContent = "";
+        });
+      });
+
+      if (compactToggle) {
+        compactToggle.addEventListener("change", e => {
+          compactEnabled = e.target.checked;
+          saveSettings();
+          applySettingsToUI();
+          renderNotes();
+        });
+      }
+
+      if (deleteOthersBtn) {
+        deleteOthersBtn.addEventListener("click", () => {
+          const hasNonFav = notes.some(n => !n.favorite);
+          if (!hasNonFav) return;
+          const ok = window.confirm("Delete all non-favorite notes? This cannot be undone.");
+          if (!ok) return;
+          notes = notes.filter(n => n.favorite);
+          saveNotes();
+          renderNotes();
+        });
+      }
+    }
+
+    // ------- Init -------
+    notes = loadNotes();
+    loadSettings();
+    applySettingsToUI();
+    renderNotes();
+    wireControls();
+  </script>
+</body>
+</html>

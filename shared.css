@@ -1,0 +1,133 @@
+/* shared.css */
+
+/* Global base */
+:root {
+    color-scheme: dark;
+    --page-max-width: 960px;
+    --page-padding: 1.25rem;
+  }
+  
+  * {
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    padding: var(--page-padding);
+    background: #05060a;
+    color: #f5f5f5;
+    font-family: system-ui, -apple-system, sans-serif;
+    transition: padding 0.15s ease;
+  }
+  
+  .page {
+    max-width: var(--page-max-width);
+    margin: 0 auto;
+  }
+  
+  /* Top bar (used by both Timers & Notes) */
+  .top-bar {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    align-items: flex-start;
+    margin-bottom: 1rem;
+  }
+  
+  .top-text h1 {
+    margin: 0 0 0.25rem;
+    font-size: 1.6rem;
+    letter-spacing: 0.015em;
+  }
+  
+  .top-text p {
+    margin: 0;
+    color: #bbbbbb;
+    font-size: 0.9rem;
+  }
+  
+  .top-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 0.4rem;
+    font-size: 0.8rem;
+    color: #9ca3af;
+  }
+  
+  .toggles {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+  }
+  
+  .toggle {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    font-size: 0.8rem;
+    color: #cccccc;
+    padding: 0.2rem 0.45rem;
+    border-radius: 999px;
+    border: 1px solid #2b2c3b;
+    background: #121321;
+  }
+  
+  .toggle input {
+    margin: 0;
+    width: 1.1rem;
+    height: 1.1rem;
+  }
+  
+  /* Red pill button – used for Reset all / Delete non-favourites */
+  .reset-all-btn {
+    padding: 0.35rem 0.9rem;
+    border-radius: 999px;
+    border: 1px solid #b91c1c;
+    background: transparent;
+    color: #fecaca;
+    font-size: 0.8rem;
+    cursor: pointer;
+    transition: transform 0.05s ease, background 0.1s ease, border-color 0.1s ease;
+  }
+  
+  .reset-all-btn:hover {
+    background: rgba(185, 28, 28, 0.14);
+  }
+  
+  .reset-all-btn:active {
+    transform: scale(0.96);
+  }
+  
+  .reset-all-btn:disabled {
+    opacity: 0.55;
+    cursor: default;
+    background: transparent;
+  }
+  
+  /* Base button */
+  button {
+    padding: 0.45rem 0.95rem;
+    border-radius: 8px;
+    border: 1px solid #333;
+    background: #1d1f2b;
+    color: #fff;
+    font-size: 0.92rem;
+    cursor: pointer;
+    transition: transform 0.05s ease, background 0.1s ease, border-color 0.1s ease;
+    white-space: nowrap;
+  }
+  
+  button:hover { background: #272a3a; }
+  button:active { transform: scale(0.97); }
+  
+  button:focus-visible,
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: 2px solid #38bdf8;
+    outline-offset: 2px;
+  }
+  
