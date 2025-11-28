@@ -22,7 +22,7 @@
       margin: 0 auto;
     }
 
-    /* Top bar (aligned with timers) */
+    /* Top bar – aligned with Timers */
     .top-bar {
       display: flex;
       justify-content: space-between;
@@ -86,7 +86,6 @@
       cursor: pointer;
       transition: transform 0.05s ease, background 0.1s ease, border-color 0.1s ease;
     }
-
     .reset-all-btn:hover { background: #991b1b; }
     .reset-all-btn:active { transform: scale(0.96); }
 
@@ -109,7 +108,6 @@
       transition: transform 0.05s ease, background 0.1s ease, border-color 0.1s ease;
       white-space: nowrap;
     }
-
     button:hover { background: #272a3a; }
     button:active { transform: scale(0.97); }
 
@@ -125,10 +123,7 @@
       background: #2563eb;
       border-color: #1d4ed8;
     }
-
-    .btn-primary:hover {
-      background: #1d4ed8;
-    }
+    .btn-primary:hover { background: #1d4ed8; }
 
     .field {
       width: 100%;
@@ -139,10 +134,7 @@
       color: #f9fafb;
       font-size: 0.95rem;
     }
-
-    .field::placeholder {
-      color: #6b7280;
-    }
+    .field::placeholder { color: #6b7280; }
 
     textarea.field {
       resize: vertical;
@@ -233,7 +225,7 @@
       padding: 0.65rem 0.75rem;
       display: flex;
       flex-direction: column;
-      gap: 0.45rem;
+      gap: 0.35rem;
     }
 
     .note.favorite {
@@ -245,23 +237,13 @@
       box-shadow: 0 0 6px rgba(248, 113, 113, 0.25);
     }
 
-    .note-main {
+    .note-title-row {
       display: flex;
-      justify-content: space-between;
-      gap: 0.6rem;
-      align-items: stretch;
-      flex-wrap: wrap;
-    }
-
-    .note-left {
-      flex: 1 1 60%;
-      min-width: 0;
-      display: flex;
-      flex-direction: column;
-      gap: 0.35rem;
+      align-items: center;
     }
 
     .note-title {
+      flex: 1 1 auto;
       font-size: 0.98rem;
       font-weight: 600;
       letter-spacing: 0.01em;
@@ -271,10 +253,7 @@
       padding: 0.35rem 0.55rem;
       color: #f9fafb;
     }
-
-    .note-title::placeholder {
-      color: #6b7280;
-    }
+    .note-title::placeholder { color: #6b7280; }
 
     .note-desc {
       font-size: 0.92rem;
@@ -286,63 +265,32 @@
       min-height: 3rem;
       resize: vertical;
     }
+    .note-desc::placeholder { color: #6b7280; }
 
-    .note-desc::placeholder {
-      color: #6b7280;
-    }
-
-    /* Inline star (used in compact mode) */
-    .note-fav-inline {
-      border: none;
-      background: transparent;
-      padding: 0;
-      margin: 0;
-      margin-right: 0.3rem;
-      cursor: pointer;
-      font-size: 0.9rem;
-      color: #e5e7eb;
-      display: none; /* only in compact mode */
-    }
-
-    .note-fav-inline:hover {
-      color: #facc15;
-    }
-
-    .note-right {
-      flex: 0 0 210px;
+    .note-footer {
       display: flex;
-      flex-direction: column;
+      align-items: center;
       justify-content: space-between;
-      align-items: flex-end;
-      gap: 0.4rem;
-      font-size: 0.8rem;
-      color: #9ca3af;
-      text-align: right;
-    }
-
-    .note-meta-label {
-      color: #d1d5db;
-      font-weight: 500;
-    }
-
-    .note-meta-value {
-      color: #9ca3af;
-    }
-
-    .note-meta-block {
-      margin-bottom: 0.2rem;
-    }
-
-    .note-reminder {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 0.15rem;
+      gap: 0.5rem;
       margin-top: 0.15rem;
+      font-size: 0.8rem;
+    }
+
+    .note-footer-left,
+    .note-footer-middle,
+    .note-footer-right {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .note-meta-added {
+      color: #9ca3af;
+      font-size: 0.8rem;
     }
 
     .note-reminder-select {
-      padding: 0.18rem 0.7rem;
+      padding: 0.2rem 0.7rem;
       border-radius: 999px;
       border: 1px solid #272727;
       background: #0b0c14;
@@ -350,7 +298,6 @@
       font-size: 0.78rem;
       cursor: pointer;
     }
-
     .note-reminder-select option {
       background: #05060a;
       color: #e5e7eb;
@@ -360,27 +307,8 @@
       font-size: 0.75rem;
       color: #9ca3af;
     }
-
     .note-reminder-status.due {
       color: #f97373;
-    }
-
-    .note-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.25rem;
-      justify-content: flex-end;
-    }
-
-    .note-delete-btn {
-      background: #b91c1c;
-      border-color: #991b1b;
-      font-size: 0.82rem;
-      padding: 0.32rem 0.8rem;
-    }
-
-    .note-delete-btn:hover {
-      background: #991b1b;
     }
 
     .note-fav-btn {
@@ -389,10 +317,15 @@
       font-size: 0.82rem;
       padding: 0.32rem 0.8rem;
     }
+    .note-fav-btn:hover { background: #111827; }
 
-    .note-fav-btn:hover {
-      background: #111827;
+    .note-delete-btn {
+      background: #b91c1c;
+      border-color: #991b1b;
+      font-size: 0.82rem;
+      padding: 0.32rem 0.8rem;
     }
+    .note-delete-btn:hover { background: #991b1b; }
 
     .note-empty-state {
       text-align: center;
@@ -408,7 +341,7 @@
       color: #6b7280;
     }
 
-    /* Compact mode (aligned with timers philosophy) */
+    /* Compact mode */
     body.compact {
       padding: 1rem;
     }
@@ -438,75 +371,45 @@
 
     body.compact .note {
       padding: 0.45rem 0.6rem;
-      gap: 0.3rem;
-    }
-
-    body.compact .note-main {
-      flex-wrap: nowrap;
-      align-items: center;
-    }
-
-    body.compact .note-left {
-      flex-direction: row;
-      align-items: center;
-      gap: 0.5rem;
-    }
-
-    body.compact .note-fav-inline {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    body.compact .note-title {
-      font-size: 0.9rem;
-      padding: 0.3rem 0.5rem;
-      flex: 1 1 auto;
+      gap: 0.25rem;
     }
 
     body.compact .note-desc {
       display: none;
     }
 
-    body.compact .note-right {
-      flex: 0 0 auto;
-      align-items: flex-end;
-      gap: 0.25rem;
+    body.compact .note-footer {
+      margin-top: 0.2rem;
     }
 
-    body.compact .note-meta-label {
-      display: none;
-    }
-
-    body.compact .note-meta-value {
-      font-size: 0.78rem;
-    }
-
-    body.compact .note-reminder-select {
-      padding: 0.15rem 0.6rem;
-      font-size: 0.74rem;
-    }
-
+    /* Hide meta + status to save space in compact */
+    body.compact .note-meta-added,
     body.compact .note-reminder-status {
       display: none;
     }
 
-    body.compact .note-delete-btn,
-    body.compact .note-fav-btn {
-      padding: 0.25rem 0.45rem;
+    /* Make middle row (Favorite + Reminder) a tight row */
+    body.compact .note-footer-middle {
+      flex: 0 0 auto;
+    }
+
+    body.compact .note-fav-btn,
+    body.compact .note-delete-btn {
+      padding: 0.25rem 0.55rem;
       font-size: 0.8rem;
     }
 
-    body.compact .note-actions {
-      flex-wrap: nowrap;
+    body.compact .note-reminder-select {
+      padding: 0.25rem 0.6rem;
+      font-size: 0.78rem;
     }
 
-    /* Hide the big Favorite button in compact mode; we use inline star instead */
-    body.compact .note-fav-btn {
-      display: none;
+    /* Ensure footer is essentially: [Fav + Reminder] .... [Delete] */
+    body.compact .note-footer-right {
+      margin-left: auto;
     }
 
-    /* Match timers: shrink the top red button in compact mode */
+    /* Match timers: smaller top red button in compact */
     body.compact .reset-all-btn {
       padding: 0.3rem 0.75rem;
       font-size: 0.75rem;
@@ -517,28 +420,18 @@
         flex-direction: column;
         align-items: flex-start;
       }
-
-      .top-right {
-        align-items: flex-start;
-      }
-
+      .top-right { align-items: flex-start; }
       .new-note-header {
         flex-direction: column;
         align-items: flex-start;
       }
-
-      .note-right {
-        flex-basis: 100%;
+      .note-footer {
+        flex-direction: column;
         align-items: flex-start;
-        text-align: left;
       }
-
-      .note-actions {
-        justify-content: flex-start;
-      }
-
-      .note-reminder {
-        align-items: flex-start;
+      body.compact .note-footer {
+        flex-direction: row;
+        align-items: center;
       }
     }
   </style>
@@ -628,7 +521,7 @@
     const SETTINGS_KEY = "lazy_notes_settings_v1";
 
     let notes = [];
-    let sortOrder = "newest"; // "newest" | "oldest"
+    let sortOrder = "newest";
     let searchQuery = "";
     let compactEnabled = false;
 
@@ -643,10 +536,7 @@
     }
 
     function saveSettings() {
-      localStorage.setItem(
-        SETTINGS_KEY,
-        JSON.stringify({ compactEnabled })
-      );
+      localStorage.setItem(SETTINGS_KEY, JSON.stringify({ compactEnabled }));
     }
 
     function applySettingsToUI() {
@@ -766,13 +656,75 @@
       } catch {}
     }
 
+    // Small helpers to reuse buttons/selects
+    function buildReminderSelect(note) {
+      const select = document.createElement("select");
+      select.className = "note-reminder-select";
+      select.setAttribute("aria-label", "Reminder");
+
+      [
+        { value: "none", label: "No reminder" },
+        { value: "1d", label: "In 1 day" },
+        { value: "3d", label: "In 3 days" },
+        { value: "7d", label: "In 7 days" }
+      ].forEach(opt => {
+        const o = document.createElement("option");
+        o.value = opt.value;
+        o.textContent = opt.label;
+        select.appendChild(o);
+      });
+
+      select.value = note.remindPreset || "none";
+
+      select.addEventListener("change", () => {
+        const v = select.value;
+        note.remindPreset = v;
+        if (v === "none") {
+          note.remindAt = null;
+        } else {
+          const days = parseInt(v, 10) || 0;
+          note.remindAt = Date.now() + days * 24 * 60 * 60 * 1000;
+        }
+        saveNotes();
+        renderNotes();
+      });
+
+      return select;
+    }
+
+    function buildFavoriteButton(note) {
+      const favBtn = document.createElement("button");
+      favBtn.className = "note-fav-btn";
+      favBtn.type = "button";
+      favBtn.textContent = note.favorite ? "★ Favorite" : "☆ Favorite";
+      favBtn.title = note.favorite ? "Unfavorite note" : "Mark note as favorite";
+      favBtn.addEventListener("click", () => {
+        note.favorite = !note.favorite;
+        saveNotes();
+        renderNotes();
+      });
+      return favBtn;
+    }
+
+    function buildDeleteButton(note) {
+      const deleteBtn = document.createElement("button");
+      deleteBtn.className = "note-delete-btn";
+      deleteBtn.type = "button";
+      deleteBtn.textContent = "🗑 Delete";
+      deleteBtn.addEventListener("click", () => {
+        notes = notes.filter(n => n.id !== note.id);
+        saveNotes();
+        renderNotes();
+      });
+      return deleteBtn;
+    }
+
     // ------- Render -------
     function renderNotes() {
       const container = document.getElementById("notes");
       container.innerHTML = "";
 
-      let list = notes.slice();
-      list = list.filter(n => matchesSearch(n, searchQuery));
+      let list = notes.slice().filter(n => matchesSearch(n, searchQuery));
 
       list.sort((a, b) => {
         if (sortOrder === "newest") return b.createdAt - a.createdAt;
@@ -796,157 +748,72 @@
         card.className = "note";
         card.dataset.noteId = note.id;
 
-        if (note.favorite) {
-          card.classList.add("favorite");
-        }
-
         const reminderInfo = getReminderInfo(note);
-        if (reminderInfo.isDue) {
-          card.classList.add("reminder-due");
-        }
+        if (note.favorite) card.classList.add("favorite");
+        if (reminderInfo.isDue) card.classList.add("reminder-due");
 
-        const main = document.createElement("div");
-        main.className = "note-main";
-
-        const left = document.createElement("div");
-        left.className = "note-left";
-
-        // Inline star (compact mode)
-        const favInline = document.createElement("button");
-        favInline.type = "button";
-        favInline.className = "note-fav-inline";
-        favInline.textContent = note.favorite ? "★" : "☆";
-        favInline.title = note.favorite ? "Unfavorite note" : "Mark note as favorite";
-        favInline.addEventListener("click", () => {
-          note.favorite = !note.favorite;
-          saveNotes();
-          renderNotes();
-        });
+        // Title
+        const titleRow = document.createElement("div");
+        titleRow.className = "note-title-row";
 
         const titleInput = document.createElement("input");
         titleInput.type = "text";
         titleInput.className = "note-title";
         titleInput.value = note.title;
         titleInput.placeholder = "Note title";
-
         titleInput.addEventListener("input", () => {
           note.title = titleInput.value;
           saveNotes();
         });
 
+        titleRow.appendChild(titleInput);
+        card.appendChild(titleRow);
+
+        // Description
         const descArea = document.createElement("textarea");
         descArea.className = "note-desc";
         descArea.rows = 3;
         descArea.value = note.description;
         descArea.placeholder = "Note description…";
-
         descArea.addEventListener("input", () => {
           note.description = descArea.value;
           saveNotes();
         });
+        card.appendChild(descArea);
 
-        left.appendChild(favInline);
-        left.appendChild(titleInput);
-        left.appendChild(descArea);
+        // Footer: added, favorite + reminder, delete
+        const footer = document.createElement("div");
+        footer.className = "note-footer";
 
-        const right = document.createElement("div");
-        right.className = "note-right";
+        const left = document.createElement("div");
+        left.className = "note-footer-left";
+        const addedSpan = document.createElement("span");
+        addedSpan.className = "note-meta-added";
+        addedSpan.textContent = "Added " + formatDateTime(note.createdAt);
+        left.appendChild(addedSpan);
 
-        const metaBlock = document.createElement("div");
-        metaBlock.className = "note-meta-block";
-
-        const label = document.createElement("div");
-        label.className = "note-meta-label";
-        label.textContent = "Added";
-        const value = document.createElement("div");
-        value.className = "note-meta-value";
-        value.textContent = formatDateTime(note.createdAt);
-
-        metaBlock.appendChild(label);
-        metaBlock.appendChild(value);
-
-        // Reminder controls
-        const reminderBlock = document.createElement("div");
-        reminderBlock.className = "note-reminder";
-
-        const reminderSelect = document.createElement("select");
-        reminderSelect.className = "note-reminder-select";
-        reminderSelect.setAttribute("aria-label", "Reminder");
-
-        [
-          { value: "none", label: "No reminder" },
-          { value: "1d", label: "In 1 day" },
-          { value: "3d", label: "In 3 days" },
-          { value: "7d", label: "In 7 days" }
-        ].forEach(opt => {
-          const o = document.createElement("option");
-          o.value = opt.value;
-          o.textContent = opt.label;
-          reminderSelect.appendChild(o);
-        });
-
-        reminderSelect.value = note.remindPreset || "none";
-
-        reminderSelect.addEventListener("change", () => {
-          const v = reminderSelect.value;
-          note.remindPreset = v;
-          if (v === "none") {
-            note.remindAt = null;
-          } else {
-            const days = parseInt(v, 10) || 0;
-            note.remindAt = Date.now() + days * 24 * 60 * 60 * 1000;
-          }
-          saveNotes();
-          renderNotes();
-        });
-
-        const reminderStatus = document.createElement("div");
+        const middle = document.createElement("div");
+        middle.className = "note-footer-middle";
+        const favBtn = buildFavoriteButton(note);
+        const reminderSelect = buildReminderSelect(note);
+        const reminderStatus = document.createElement("span");
         reminderStatus.className = "note-reminder-status";
         reminderStatus.textContent = reminderInfo.label;
-        if (reminderInfo.isDue) {
-          reminderStatus.classList.add("due");
-        }
+        if (reminderInfo.isDue) reminderStatus.classList.add("due");
+        middle.appendChild(favBtn);
+        middle.appendChild(reminderSelect);
+        middle.appendChild(reminderStatus);
 
-        reminderBlock.appendChild(reminderSelect);
-        reminderBlock.appendChild(reminderStatus);
-        metaBlock.appendChild(reminderBlock);
+        const right = document.createElement("div");
+        right.className = "note-footer-right";
+        const deleteBtn = buildDeleteButton(note);
+        right.appendChild(deleteBtn);
 
-        // Actions
-        const actions = document.createElement("div");
-        actions.className = "note-actions";
+        footer.appendChild(left);
+        footer.appendChild(middle);
+        footer.appendChild(right);
+        card.appendChild(footer);
 
-        const favBtn = document.createElement("button");
-        favBtn.className = "note-fav-btn";
-        favBtn.type = "button";
-        favBtn.textContent = note.favorite ? "★ Favorite" : "☆ Favorite";
-        favBtn.title = note.favorite ? "Unfavorite note" : "Mark note as favorite";
-
-        favBtn.addEventListener("click", () => {
-          note.favorite = !note.favorite;
-          saveNotes();
-          renderNotes();
-        });
-
-        const deleteBtn = document.createElement("button");
-        deleteBtn.className = "note-delete-btn";
-        deleteBtn.type = "button";
-        deleteBtn.textContent = "🗑 Delete";
-
-        deleteBtn.addEventListener("click", () => {
-          notes = notes.filter(n => n.id !== note.id);
-          saveNotes();
-          renderNotes();
-        });
-
-        actions.appendChild(favBtn);
-        actions.appendChild(deleteBtn);
-
-        right.appendChild(metaBlock);
-        right.appendChild(actions);
-
-        main.appendChild(left);
-        main.appendChild(right);
-        card.appendChild(main);
         container.appendChild(card);
       });
 
@@ -1000,9 +867,7 @@
       const compactToggle = document.getElementById("compactToggle");
       const deleteOthersBtn = document.getElementById("deleteOthersBtn");
 
-      if (addBtn) {
-        addBtn.addEventListener("click", handleAddNote);
-      }
+      if (addBtn) addBtn.addEventListener("click", handleAddNote);
 
       if (titleInput) {
         titleInput.addEventListener("keydown", e => {
@@ -1021,7 +886,6 @@
             insertTextAtCursor(descInput, "\n");
             return;
           }
-
           if (
             e.key === "Enter" &&
             !e.ctrlKey &&
