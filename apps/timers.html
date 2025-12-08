@@ -32,6 +32,14 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       transition: padding 0.15s ease;
     }
 
+    /* Constrain content width to match the notes page.  This wrapper centers the
+       page content and prevents the timers interface from stretching across the
+       entire iframe. */
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
     .visually-hidden {
       position: absolute;
       width: 1px;
@@ -493,44 +501,46 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
 </head>
 
 <body>
-  <header class="top-bar">
-    <div class="top-text">
-      <h1>Timers</h1>
-      <p>Stored locally in this browser.</p>
-    </div>
-    <div class="top-right">
-      <div class="toggles">
-        <label class="toggle">
-          <input type="checkbox" id="compactToggle">
-          <span>Compact</span>
-        </label>
-        <label class="toggle">
-          <input type="checkbox" id="soundToggle" checked>
-          <span>Sound</span>
-        </label>
+  <div class="page">
+    <header class="top-bar">
+      <div class="top-text">
+        <h1>Timers</h1>
+        <p>Stored locally in this browser.</p>
       </div>
-      <button id="resetAllBtn" class="reset-all-btn" type="button">Reset all</button>
-    </div>
-  </header>
-
-  <main>
-    <section>
-      <div class="controls">
-        <label for="nameInput" class="visually-hidden">Timer name</label>
-        <input id="nameInput" type="text" placeholder="Timer name">
-
-        <label for="durationInput" class="visually-hidden">Duration</label>
-        <input id="durationInput" type="text">
-
-        <button id="addBtn" type="button">Add</button>
+      <div class="top-right">
+        <div class="toggles">
+          <label class="toggle">
+            <input type="checkbox" id="compactToggle">
+            <span>Compact</span>
+          </label>
+          <label class="toggle">
+            <input type="checkbox" id="soundToggle" checked>
+            <span>Sound</span>
+          </label>
+        </div>
+        <button id="resetAllBtn" class="reset-all-btn" type="button">Reset all</button>
       </div>
-      <p id="durationError" class="input-error"></p>
-    </section>
+    </header>
 
-    <section aria-label="Timers">
-      <div id="timers"></div>
-    </section>
-  </main>
+    <main>
+      <section>
+        <div class="controls">
+          <label for="nameInput" class="visually-hidden">Timer name</label>
+          <input id="nameInput" type="text" placeholder="Timer name">
+
+          <label for="durationInput" class="visually-hidden">Duration</label>
+          <input id="durationInput" type="text">
+
+          <button id="addBtn" type="button">Add</button>
+        </div>
+        <p id="durationError" class="input-error"></p>
+      </section>
+
+      <section aria-label="Timers">
+        <div id="timers"></div>
+      </section>
+    </main>
+  </div><!-- /.page -->
 
   <!-- Reset All Modal -->
   <div id="resetModalBackdrop" class="modal-backdrop">
