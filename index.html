@@ -186,7 +186,7 @@
       <div class="tab-group">
         <button class="tab-button" data-src="apps/timers.html">Timers</button>
         <button class="tab-button" data-src="apps/notes.html">Notes</button>
-        <button class="tab-button home-tab" data-src="apps/home.html">Home</button>
+        <button class="tab-button home-tab active" data-src="apps/home.html">Home</button>
       </div>
     </div>
   </header>
@@ -208,7 +208,7 @@
     ></iframe>
 
     <iframe
-      class="page-frame"
+      class="page-frame active"
       data-src="apps/home.html"
       src="apps/home.html"
       title="Home"
@@ -263,8 +263,10 @@
       storedSrc = null;
     }
 
+    const homeButton = buttons.find(btn => btn.dataset.src === "apps/home.html");
     const initialButton =
       buttons.find(btn => btn.dataset.src === storedSrc) ||
+      homeButton ||
       buttons[0];
 
     switchToButton(initialButton);
