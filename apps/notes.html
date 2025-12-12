@@ -856,6 +856,23 @@
       titleInput.focus();
     }
 
+    // ------- Cross-page quick actions -------
+    window.addEventListener("message", event => {
+      const data = event.data;
+      if (!data || typeof data !== "object") return;
+
+      if (data.type === "lazy_focus_new_note") {
+        const titleInput = document.getElementById("titleInput");
+        const descInput = document.getElementById("descInput");
+        if (titleInput) {
+          titleInput.focus();
+          titleInput.select();
+        } else if (descInput) {
+          descInput.focus();
+        }
+      }
+    });
+
     // ------- Wiring -------
     function wireControls() {
       const addBtn = document.getElementById("addNoteBtn");

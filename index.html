@@ -107,6 +107,12 @@
       border-color: #1d4ed8;
     }
 
+    .tab-button.home-tab {
+      font-weight: 700;
+      letter-spacing: 0.01em;
+      color: #dbeafe;
+    }
+
     /* Alarm state for Timers tab */
     .tab-button.timer-alert {
       border-color: #ef4444;
@@ -180,7 +186,7 @@
       <div class="tab-group">
         <button class="tab-button" data-src="apps/timers.html">Timers</button>
         <button class="tab-button" data-src="apps/notes.html">Notes</button>
-        <button class="tab-button" data-src="page3.html">Page 3</button>
+        <button class="tab-button home-tab" data-src="apps/home.html">Home</button>
       </div>
     </div>
   </header>
@@ -203,9 +209,9 @@
 
     <iframe
       class="page-frame"
-      data-src="page3.html"
-      src="page3.html"
-      title="Page 3"
+      data-src="apps/home.html"
+      src="apps/home.html"
+      title="Home"
     ></iframe>
   </main>
 
@@ -267,6 +273,24 @@
     window.addEventListener("message", event => {
       const data = event.data;
       if (!data || typeof data !== "object") return;
+
+      if (data.type === "lazy_switch_tab") {
+        const targetBtn = buttons.find(btn => btn.dataset.src === data.targetSrc);
+        if (targetBtn) switchToButton(targetBtn);
+        return;
+      }
+
+      if (data.type === "lazy_quick_add_timer") {
+        const timersFrame = frames.find(frame => frame.dataset.src === "apps/timers.html");
+        timersFrame?.contentWindow?.postMessage(data, "*");
+        return;
+      }
+
+      if (data.type === "lazy_focus_new_note") {
+        const notesFrame = frames.find(frame => frame.dataset.src === "apps/notes.html");
+        notesFrame?.contentWindow?.postMessage(data, "*");
+        return;
+      }
 
       // Timers: { source: "timers", type: "alarmState", anyFinished: boolean }
       if (data.source === "timers" && data.type === "alarmState") {

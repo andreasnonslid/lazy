@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Home • Lazy Apps</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link rel="stylesheet" href="../shared.css">
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 1.25rem;
+      background: #05060a;
+      color: #f5f5f5;
+      font-family: system-ui, -apple-system, sans-serif;
+    }
+
+    .page {
+      max-width: 940px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+
+    h1 {
+      margin: 0;
+      font-size: 1.5rem;
+      letter-spacing: 0.015em;
+    }
+
+    .badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: #0b0c14;
+      border: 1px solid #111827;
+      color: #cbd5f5;
+      font-size: 0.85rem;
+    }
+
+    section {
+      background: radial-gradient(circle at top left, #0b0c14, #06060d);
+      border: 1px solid #0f172a;
+      border-radius: 12px;
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.6rem;
+      box-shadow: 0 10px 35px rgba(0, 0, 0, 0.35);
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+
+    .section-header h2 {
+      margin: 0;
+      font-size: 1.1rem;
+      letter-spacing: 0.01em;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .section-header h2 span {
+      font-size: 0.85rem;
+      color: #9ca3af;
+      font-weight: 500;
+    }
+
+    .items {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+      gap: 0.6rem;
+      width: 100%;
+    }
+
+    .card {
+      border: 1px solid #1f2937;
+      background: linear-gradient(135deg, #0d1020, #0b0d18);
+      border-radius: 10px;
+      padding: 0.75rem 0.85rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.4rem;
+      min-height: 110px;
+    }
+
+    .card h3 {
+      margin: 0;
+      font-size: 1rem;
+      color: #e5e7eb;
+    }
+
+    .card p {
+      margin: 0;
+      color: #9ca3af;
+      font-size: 0.9rem;
+      line-height: 1.4;
+      white-space: pre-line;
+    }
+
+    .empty-state {
+      margin: 0;
+      color: #9ca3af;
+      font-size: 0.95rem;
+    }
+
+    .tags {
+      display: flex;
+      gap: 0.35rem;
+      flex-wrap: wrap;
+      margin-top: auto;
+    }
+
+    .tag {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      padding: 0.25rem 0.55rem;
+      border-radius: 999px;
+      background: #111827;
+      border: 1px solid #1f2937;
+      font-size: 0.8rem;
+      color: #cbd5f5;
+    }
+
+    .tag.due { border-color: #f87171; color: #fecdd3; background: #2a0c16; }
+    .tag.favorite { border-color: #a78bfa; color: #e9d5ff; background: #281537; }
+
+    .actions {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    button {
+      border: 1px solid #1f2937;
+      background: #0f172a;
+      color: #f9fafb;
+      padding: 0.5rem 0.9rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.05s ease, background 0.1s ease, border-color 0.1s ease;
+    }
+
+    button:hover { background: #111e39; }
+    button:active { transform: scale(0.97); }
+
+    .primary {
+      background: linear-gradient(120deg, #2563eb, #7c3aed);
+      border-color: #1d4ed8;
+    }
+
+    .primary:hover { background: linear-gradient(120deg, #2f6ff3, #8b5cf6); }
+
+    @media (max-width: 540px) {
+      .items { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header>
+      <h1>Home</h1>
+      <div class="badge">Quick overview</div>
+    </header>
+
+    <section>
+      <div class="section-header">
+        <h2>Quick actions</h2>
+        <div class="actions">
+          <button id="quickTimerBtn" class="primary" type="button">Start 5-minute timer</button>
+          <button id="quickNoteBtn" type="button">Add note</button>
+        </div>
+      </div>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2>
+          Finished timers
+          <span id="timerCount"></span>
+        </h2>
+        <div class="actions">
+          <button id="openTimersBtn" type="button">Go to Timers</button>
+        </div>
+      </div>
+      <div id="timersList" class="items"></div>
+      <p id="timersEmpty" class="empty-state" hidden>No finished timers yet.</p>
+    </section>
+
+    <section>
+      <div class="section-header">
+        <h2>
+          Favorite notes & reminders
+          <span id="notesCount"></span>
+        </h2>
+        <div class="actions">
+          <button id="openNotesBtn" type="button">Go to Notes</button>
+        </div>
+      </div>
+      <div id="notesList" class="items"></div>
+      <p id="notesEmpty" class="empty-state" hidden>No favorites or due reminders yet.</p>
+    </section>
+  </div>
+
+  <script>
+    const TIMERS_KEY = "infinite_timers_v1";
+    const NOTES_KEY = "lazy_notes_v1";
+
+    function parseTimers() {
+      const raw = localStorage.getItem(TIMERS_KEY);
+      if (!raw) return [];
+      try {
+        const arr = JSON.parse(raw);
+        if (!Array.isArray(arr)) return [];
+        return arr
+          .map(t => ({
+            id: t.id,
+            name: t.name || "Timer",
+            remainingSec: typeof t.remainingSec === "number" ? t.remainingSec : 0,
+            durationSec: typeof t.durationSec === "number" ? t.durationSec : 0
+          }))
+          .filter(t => typeof t.remainingSec === "number");
+      } catch {
+        return [];
+      }
+    }
+
+    function parseNotes() {
+      const raw = localStorage.getItem(NOTES_KEY);
+      if (!raw) return [];
+      try {
+        const parsed = JSON.parse(raw);
+        if (!Array.isArray(parsed)) return [];
+        return parsed.map(n => ({
+          id: n.id || (Date.now().toString(36) + Math.random().toString(16).slice(2)),
+          title: n.title || "Untitled",
+          description: n.description || "",
+          createdAt: typeof n.createdAt === "number" ? n.createdAt : Date.now(),
+          favorite: !!n.favorite,
+          remindAt: typeof n.remindAt === "number" ? n.remindAt : null,
+          remindPreset:
+            n.remindPreset === "1d" || n.remindPreset === "3d" || n.remindPreset === "7d"
+              ? n.remindPreset
+              : "none"
+        }));
+      } catch {
+        return [];
+      }
+    }
+
+    function getReminderInfo(note) {
+      if (!note.remindAt || note.remindPreset === "none") {
+        return { label: "No reminder set", isDue: false };
+      }
+
+      const now = Date.now();
+      const diff = note.remindAt - now;
+      const abs = Math.abs(diff);
+      const minute = 60 * 1000;
+      const hour = 60 * minute;
+      const day = 24 * hour;
+
+      let unitLabel;
+      let value;
+
+      if (abs < minute) {
+        unitLabel = "just now";
+      } else if (abs < hour) {
+        value = Math.round(abs / minute);
+        unitLabel = value + " min" + (value === 1 ? "" : "s");
+      } else if (abs < day) {
+        value = Math.round(abs / hour);
+        unitLabel = value + " hour" + (value === 1 ? "" : "s");
+      } else {
+        value = Math.round(abs / day);
+        unitLabel = value + " day" + (value === 1 ? "" : "s");
+      }
+
+      let label;
+      if (abs < minute) {
+        label = "Reminder now";
+      } else if (diff > 0) {
+        label = "In " + unitLabel;
+      } else {
+        label = unitLabel + " ago";
+      }
+
+      return {
+        label: "Reminder: " + label,
+        isDue: diff <= 0
+      };
+    }
+
+    function switchTab(targetSrc) {
+      if (!targetSrc) return;
+      try {
+        const btn = parent?.document?.querySelector(`.tab-button[data-src="${targetSrc}"]`);
+        if (btn) {
+          btn.focus({ preventScroll: true });
+          btn.click();
+          return;
+        }
+      } catch {}
+
+      try {
+        parent?.postMessage({ type: "lazy_switch_tab", targetSrc }, "*");
+      } catch {}
+    }
+
+    function findFrame(targetSrc) {
+      try {
+        return parent?.document?.querySelector(`.page-frame[data-src="${targetSrc}"]`);
+      } catch {
+        return null;
+      }
+    }
+
+    function renderTimers() {
+      const list = document.getElementById("timersList");
+      const empty = document.getElementById("timersEmpty");
+      const countLabel = document.getElementById("timerCount");
+      if (!list || !empty || !countLabel) return;
+
+      list.innerHTML = "";
+      const timers = parseTimers().filter(t => (t.remainingSec ?? 0) <= 0);
+      countLabel.textContent = timers.length ? `(${timers.length})` : "";
+
+      if (!timers.length) {
+        empty.hidden = false;
+        return;
+      }
+
+      empty.hidden = true;
+      timers.sort((a, b) => (a.name || "").localeCompare(b.name || ""));
+      timers.forEach(t => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const title = document.createElement("h3");
+        title.textContent = t.name || "Timer";
+        card.appendChild(title);
+
+        const tagRow = document.createElement("div");
+        tagRow.className = "tags";
+
+        const tag = document.createElement("span");
+        tag.className = "tag due";
+        tag.textContent = "Finished";
+        tagRow.appendChild(tag);
+
+        card.appendChild(tagRow);
+        list.appendChild(card);
+      });
+    }
+
+    function renderNotes() {
+      const list = document.getElementById("notesList");
+      const empty = document.getElementById("notesEmpty");
+      const countLabel = document.getElementById("notesCount");
+      if (!list || !empty || !countLabel) return;
+
+      list.innerHTML = "";
+      const notes = parseNotes();
+      const important = [];
+      notes.forEach(n => {
+        const info = getReminderInfo(n);
+        if (n.favorite || info.isDue) {
+          important.push({ note: n, info });
+        }
+      });
+
+      // Remove duplicates by ID while keeping most recent
+      const unique = [];
+      const seen = new Set();
+      important
+        .sort((a, b) => (b.note.createdAt || 0) - (a.note.createdAt || 0))
+        .forEach(item => {
+          if (seen.has(item.note.id)) return;
+          seen.add(item.note.id);
+          unique.push(item);
+        });
+
+      countLabel.textContent = unique.length ? `(${unique.length})` : "";
+
+      if (!unique.length) {
+        empty.hidden = false;
+        return;
+      }
+
+      empty.hidden = true;
+      unique.forEach(({ note, info }) => {
+        const card = document.createElement("article");
+        card.className = "card";
+
+        const title = document.createElement("h3");
+        title.textContent = note.title || "Untitled";
+        card.appendChild(title);
+
+        if (note.description) {
+          const desc = document.createElement("p");
+          desc.textContent = note.description.slice(0, 260);
+          card.appendChild(desc);
+        }
+
+        const tagRow = document.createElement("div");
+        tagRow.className = "tags";
+
+        if (note.favorite) {
+          const favTag = document.createElement("span");
+          favTag.className = "tag favorite";
+          favTag.textContent = "Favorite";
+          tagRow.appendChild(favTag);
+        }
+
+        const reminderTag = document.createElement("span");
+        reminderTag.className = "tag" + (info.isDue ? " due" : "");
+        reminderTag.textContent = info.label;
+        tagRow.appendChild(reminderTag);
+
+        card.appendChild(tagRow);
+        list.appendChild(card);
+      });
+    }
+
+    function wireButtons() {
+      const timersBtn = document.getElementById("openTimersBtn");
+      const notesBtn = document.getElementById("openNotesBtn");
+      const quickTimerBtn = document.getElementById("quickTimerBtn");
+      const quickNoteBtn = document.getElementById("quickNoteBtn");
+
+      if (timersBtn) timersBtn.addEventListener("click", () => switchTab("apps/timers.html"));
+      if (notesBtn) notesBtn.addEventListener("click", () => switchTab("apps/notes.html"));
+
+      if (quickTimerBtn) {
+        quickTimerBtn.addEventListener("click", () => {
+          const payload = { type: "lazy_quick_add_timer", name: "5-minute timer", durationSec: 5 * 60 };
+          const frame = findFrame("apps/timers.html");
+          try { frame?.contentWindow?.postMessage(payload, "*"); } catch {}
+          switchTab("apps/timers.html");
+        });
+      }
+
+      if (quickNoteBtn) {
+        quickNoteBtn.addEventListener("click", () => {
+          const payload = { type: "lazy_focus_new_note" };
+          const frame = findFrame("apps/notes.html");
+          try { frame?.contentWindow?.postMessage(payload, "*"); } catch {}
+          switchTab("apps/notes.html");
+        });
+      }
+    }
+
+    function refresh() {
+      renderTimers();
+      renderNotes();
+    }
+
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "visible") {
+        refresh();
+      }
+    });
+
+    window.addEventListener("focus", refresh);
+
+    wireButtons();
+    refresh();
+  </script>
+</body>
+</html>

@@ -1245,6 +1245,20 @@ Copyright (c) 2025 Andreas Nonslid Håvardsen
       });
     }
 
+    // --- Cross-page quick actions ---
+    window.addEventListener("message", event => {
+      const data = event.data;
+      if (!data || typeof data !== "object") return;
+
+      if (data.type === "lazy_quick_add_timer") {
+        const durationSec = Math.max(0, Math.floor(Number(data.durationSec) || 0));
+        if (!durationSec) return;
+        const name = (data.name || "Timer").toString().trim() || "Timer";
+        addTimer(name, durationSec);
+        notifyParentAlarmState();
+      }
+    });
+
     // --- Event wiring ---
     document.getElementById("addBtn").onclick = () => {
       handleAddTimer();
