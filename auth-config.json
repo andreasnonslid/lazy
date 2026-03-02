@@ -1,0 +1,21 @@
+{
+  "version": 1,
+  "username": "andreasnh",
+  "passwordHash": "d965c3b9d6e3a19025b896ab29d6b5054ad4b386b4d4dc2970ba133fd3a9f4b1",
+  "salt": "0d06ee6ef138bbf9d534077dec8c5ded360de3c05bcb37e66a8546c18f8870bf",
+  "encryptedToken": {
+    "iv": "4463c324f09f175afa44a1a8",
+    "ciphertext": "41a406fbf4c1a3d42f19dd8e2af560cf865925f42f360a717b5f05ce681031c3c1e315740f2414defb09c89ee24c5296140d724b390e2dd56104b91c1621317ab57ec30fc754e983c2e6bbd7dfb753e5b1461fb0d681cfd87843e9eb2077ffa36adb202061d7a459ef325ce020"
+  },
+  "repo": {
+    "owner": "andreasnonslid",
+    "name": "lazy"
+  },
+  "syncKeys": [
+    "infinite_timers_v1",
+    "infinite_timers_settings_v1",
+    "lazy_notes_v1",
+    "lazy_notes_settings_v1",
+    "lazy_last_page_v1"
+  ]
+}
