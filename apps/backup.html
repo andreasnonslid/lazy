@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Backup</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <style>
+    :root { color-scheme: dark; }
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      padding: 1rem;
+      background: #05060a;
+      color: #f5f5f5;
+      font-family: system-ui, -apple-system, sans-serif;
+      transition: padding 0.15s ease;
+    }
+
+    .page {
+      max-width: 920px;
+      margin: 0 auto;
+    }
+
+    /* Top bar – aligned with Timers and Notes */
+    .top-bar {
+      display: flex;
+      justify-content: space-between;
+      gap: 1rem;
+      align-items: flex-start;
+      margin-bottom: 0.8rem;
+    }
+
+    .top-text h1 {
+      margin: 0 0 0.25rem;
+      font-size: 1.6rem;
+      letter-spacing: 0.015em;
+    }
+
+    .top-text p {
+      margin: 0;
+      color: #bbbbbb;
+      font-size: 0.9rem;
+    }
+
+    .card {
+      background: radial-gradient(circle at top left, #151623, #090a11);
+      border-radius: 12px;
+      border: 1px solid #262637;
+      padding: 0.9rem 1rem 0.85rem;
+      margin-bottom: 0.9rem;
+    }
+
+    .card h2 {
+      margin: 0 0 0.6rem;
+      font-size: 1.1rem;
+    }
+
+    .card p {
+      margin: 0 0 0.8rem;
+      color: #d1d5db;
+      font-size: 0.9rem;
+      line-height: 1.5;
+    }
+
+    button {
+      padding: 0.45rem 0.95rem;
+      border-radius: 8px;
+      border: 1px solid #333;
+      background: #1d1f2b;
+      color: #fff;
+      font-size: 0.92rem;
+      cursor: pointer;
+      transition: transform 0.05s ease, background 0.1s ease, border-color 0.1s ease;
+      white-space: nowrap;
+    }
+    button:hover { background: #272a3a; }
+    button:active { transform: scale(0.97); }
+    button:focus-visible,
+    .field:focus-visible,
+    input:focus-visible { outline: 2px solid #38bdf8; outline-offset: 2px; }
+
+    .btn-primary {
+      background: #2563eb;
+      border-color: #1d4ed8;
+    }
+    .btn-primary:hover { background: #1d4ed8; }
+
+    .field {
+      width: 100%;
+      padding: 0.45rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #272727;
+      background: #101119;
+      color: #f9fafb;
+      font-size: 0.95rem;
+      font-family: ui-monospace, monospace;
+    }
+    .field::placeholder { color: #6b7280; }
+
+    textarea.field {
+      resize: vertical;
+      min-height: 8rem;
+      margin-bottom: 0.6rem;
+    }
+
+    .file-input-wrap {
+      margin-bottom: 0.6rem;
+    }
+
+    .file-input-wrap input[type="file"] {
+      font-size: 0.85rem;
+      color: #d1d5db;
+    }
+
+    .msg {
+      padding: 0.5rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.88rem;
+      margin-top: 0.6rem;
+    }
+
+    .msg-success {
+      background: #052e16;
+      border: 1px solid #16a34a;
+      color: #86efac;
+    }
+
+    .msg-error {
+      background: #450a0a;
+      border: 1px solid #b91c1c;
+      color: #fca5a5;
+    }
+
+    .msg-warn {
+      background: #451a03;
+      border: 1px solid #d97706;
+      color: #fde68a;
+    }
+
+    label {
+      display: block;
+      font-size: 0.85rem;
+      color: #d1d5db;
+      margin-bottom: 0.3rem;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    @media (max-width: 640px) {
+      .top-bar {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+    <header class="top-bar">
+      <div class="top-text">
+        <h1>Backup</h1>
+        <p>Export your data as JSON or restore from a backup file.</p>
+      </div>
+    </header>
+
+    <section class="card">
+      <h2>Export</h2>
+      <p>Download all timers, notes, and settings as a JSON file. Use this for manual backups or to move data to another device.</p>
+      <button id="exportBtn" class="btn-primary" type="button">Download backup</button>
+      <div id="exportMsg" class="msg" hidden></div>
+    </section>
+
+    <section class="card">
+      <h2>Import</h2>
+      <p>Restore from a backup file or paste JSON below. This will <strong>overwrite</strong> your current timers and notes.</p>
+      <div class="file-input-wrap">
+        <label for="fileInput">Choose file</label>
+        <input id="fileInput" type="file" accept=".json,application/json">
+      </div>
+      <label for="pasteInput">Or paste JSON</label>
+      <textarea id="pasteInput" class="field" placeholder='{"version":1,"data":{...}}'></textarea>
+      <div class="btn-row">
+        <button id="importBtn" type="button">Import</button>
+      </div>
+      <div id="importMsg" class="msg" hidden></div>
+    </section>
+  </div>
+
+  <script>
+    const SYNC_KEYS = [
+      'infinite_timers_v1',
+      'infinite_timers_settings_v1',
+      'lazy_notes_v1',
+      'lazy_notes_settings_v1',
+      'lazy_last_page_v1'
+    ];
+
+    function collectData() {
+      const data = {};
+      SYNC_KEYS.forEach(k => {
+        const v = localStorage.getItem(k);
+        if (v !== null) {
+          try { data[k] = JSON.parse(v); } catch { data[k] = v; }
+        }
+      });
+      return data;
+    }
+
+    function exportBackup() {
+      const payload = {
+        version: 1,
+        exportedAt: Date.now(),
+        data: collectData()
+      };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url;
+      a.download = 'lazy-backup-' + new Date().toISOString().slice(0, 10) + '.json';
+      a.click();
+      URL.revokeObjectURL(url);
+
+      const msg = document.getElementById('exportMsg');
+      msg.hidden = false;
+      msg.className = 'msg msg-success';
+      msg.textContent = 'Download started.';
+      setTimeout(() => { msg.hidden = true; }, 3000);
+    }
+
+    function showImportMsg(text, isError) {
+      const msg = document.getElementById('importMsg');
+      msg.hidden = false;
+      msg.textContent = text;
+      msg.className = 'msg ' + (isError ? 'msg-error' : 'msg-success');
+    }
+
+    function hideImportMsg() {
+      document.getElementById('importMsg').hidden = true;
+    }
+
+    function doImport(data) {
+      if (!data || typeof data !== 'object') {
+        showImportMsg('Invalid backup: missing or invalid data object.', true);
+        return;
+      }
+
+      const d = data.data;
+      if (!d || typeof d !== 'object') {
+        showImportMsg('Invalid backup: missing "data" object.', true);
+        return;
+      }
+
+      let restored = 0;
+      SYNC_KEYS.forEach(k => {
+        if (!(k in d)) return;
+        const v = d[k];
+        localStorage.setItem(k, typeof v === 'string' ? v : JSON.stringify(v));
+        restored++;
+      });
+
+      if (restored === 0) {
+        showImportMsg('No valid keys found in backup.', true);
+        return;
+      }
+
+      showImportMsg('Restored ' + restored + ' item(s). Reloading Timers and Notes…', false);
+      document.getElementById('pasteInput').value = '';
+
+      try {
+        if (window.parent && window.parent !== window && window.parent.postMessage) {
+          window.parent.postMessage({ type: 'lazy_backup_imported' }, '*');
+        }
+      } catch {}
+
+      setTimeout(hideImportMsg, 4000);
+    }
+
+    document.getElementById('exportBtn').addEventListener('click', exportBackup);
+
+    document.getElementById('fileInput').addEventListener('change', (e) => {
+      const file = e.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try {
+          const data = JSON.parse(reader.result);
+          doImport(data);
+        } catch {
+          showImportMsg('Invalid JSON in file.', true);
+        }
+        e.target.value = '';
+      };
+      reader.readAsText(file);
+    });
+
+    document.getElementById('importBtn').addEventListener('click', () => {
+      const raw = document.getElementById('pasteInput').value.trim();
+      if (!raw) {
+        showImportMsg('Paste JSON or choose a file first.', true);
+        return;
+      }
+      try {
+        const data = JSON.parse(raw);
+        doImport(data);
+      } catch {
+        showImportMsg('Invalid JSON.', true);
+      }
+    });
+  </script>
+</body>
+</html>

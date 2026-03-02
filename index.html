@@ -456,7 +456,7 @@
         <div class="tab-group">
           <button class="tab-button" data-src="apps/timers.html">Timers</button>
           <button class="tab-button" data-src="apps/notes.html">Notes</button>
-          <button class="tab-button" data-src="page3.html">Page 3</button>
+          <button class="tab-button" data-src="apps/backup.html">Backup</button>
         </div>
 
         <div id="syncControls" class="sync-controls" hidden>
@@ -482,7 +482,7 @@
   <main>
     <iframe class="page-frame" data-src="apps/timers.html" title="Timers"></iframe>
     <iframe class="page-frame" data-src="apps/notes.html" title="Notes"></iframe>
-    <iframe class="page-frame" data-src="page3.html" title="Page 3"></iframe>
+    <iframe class="page-frame" data-src="apps/backup.html" title="Backup"></iframe>
   </main>
 
   <script src="auth.js"></script>
@@ -531,6 +531,11 @@
       if (data.type === "lazy_notes_reminder_state") {
         const notesBtn = buttons.find(btn => btn.dataset.src === "apps/notes.html");
         if (notesBtn) notesBtn.classList.toggle("notes-reminder", !!data.hasDue);
+        return;
+      }
+
+      if (data.type === "lazy_backup_imported") {
+        reloadIframes();
       }
     });
 
