@@ -65,6 +65,12 @@
       display: block;
     }
 
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
     .tab-group {
       display: flex;
       justify-content: center;
@@ -76,7 +82,7 @@
     }
 
     .tab-button {
-      position: relative; /* needed for the notes dot */
+      position: relative;
       border: none;
       background: transparent;
       color: #e5e7eb;
@@ -107,7 +113,6 @@
       border-color: #1d4ed8;
     }
 
-    /* Alarm state for Timers tab */
     .tab-button.timer-alert {
       border-color: #ef4444;
       color: #fecaca;
@@ -119,7 +124,6 @@
       vertical-align: -0.1em;
     }
 
-    /* Subtle dot for Notes reminders */
     .tab-button.notes-reminder::after {
       content: "";
       position: absolute;
@@ -136,14 +140,90 @@
       outline-offset: 2px;
     }
 
+    /* ---- Sync controls ---- */
+    .sync-controls {
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .sync-btn {
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid #334155;
+      background: #1e293b;
+      color: #d1d5db;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+      white-space: nowrap;
+    }
+
+    .sync-btn:hover { background: #334155; }
+    .sync-btn:active { transform: scale(0.96); }
+    .sync-btn:disabled { opacity: 0.6; cursor: not-allowed; }
+
+    .sync-btn.dirty { border-color: #d97706; color: #fde68a; }
+    .sync-btn.syncing { opacity: 0.7; }
+    .sync-btn.success { border-color: #16a34a; color: #86efac; }
+    .sync-btn.error { border-color: #b91c1c; color: #fca5a5; }
+
+    .sync-auto-label {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      font-size: 0.75rem;
+      color: #9ca3af;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .sync-auto-label input {
+      margin: 0;
+      width: 0.9rem;
+      height: 0.9rem;
+    }
+
+    .sync-interval {
+      padding: 0.15rem 0.3rem;
+      border-radius: 6px;
+      border: 1px solid #374151;
+      background: #1f2937;
+      color: #d1d5db;
+      font-size: 0.75rem;
+    }
+
+    .sync-interval:disabled { opacity: 0.35; }
+
+    .sync-status {
+      font-size: 0.7rem;
+      color: #6b7280;
+      white-space: nowrap;
+    }
+
+    /* ---- Logout ---- */
+    .logout-btn {
+      padding: 0.25rem 0.7rem;
+      border-radius: 999px;
+      border: 1px solid #374151;
+      background: #1f2937;
+      color: #d1d5db;
+      font-size: 0.78rem;
+      cursor: pointer;
+      transition: background 0.1s;
+      white-space: nowrap;
+    }
+
+    .logout-btn:hover { background: #374151; }
+    .logout-btn:active { transform: scale(0.96); }
+
     main {
       flex: 1 1 auto;
-      margin-top: 3.1rem; /* space for fixed nav */
+      margin-top: 3.1rem;
       padding: 0;
       min-height: 0;
     }
 
-    /* One iframe per page, all full height; only .active is visible */
     .page-frame {
       width: 100%;
       height: 100%;
@@ -156,6 +236,146 @@
       display: block;
     }
 
+    /* ---- Auth overlay ---- */
+    #authOverlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #05060a;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1rem;
+    }
+
+    #authOverlay.hidden { display: none; }
+
+    .auth-card {
+      width: 100%;
+      max-width: 360px;
+    }
+
+    .auth-brand {
+      display: flex;
+      align-items: center;
+      gap: 0rem;
+      margin-bottom: 1.5rem;
+      justify-content: center;
+    }
+
+    .auth-brand img {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+    }
+
+    .auth-brand span {
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: #9ca3af;
+    }
+
+    .auth-title {
+      font-size: 1.25rem;
+      margin: 0 0 1rem;
+      text-align: center;
+    }
+
+    .auth-card label {
+      display: block;
+      font-size: 0.83rem;
+      color: #d1d5db;
+      margin-bottom: 0.3rem;
+    }
+
+    .auth-card input {
+      width: 100%;
+      padding: 0.5rem 0.6rem;
+      border-radius: 8px;
+      border: 1px solid #272727;
+      background: #101119;
+      color: #f9fafb;
+      font-size: 0.95rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .auth-card input::placeholder { color: #6b7280; }
+
+    .auth-card input:focus {
+      outline: 2px solid #38bdf8;
+      outline-offset: 1px;
+      border-color: transparent;
+    }
+
+    .auth-msg {
+      padding: 0.5rem 0.7rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      margin-bottom: 0.75rem;
+    }
+
+    .auth-error {
+      background: #450a0a;
+      border: 1px solid #b91c1c;
+      color: #fca5a5;
+    }
+
+    .auth-lockout {
+      background: #451a03;
+      border: 1px solid #d97706;
+      color: #fde68a;
+    }
+
+    .auth-card button[type="submit"] {
+      width: 100%;
+      padding: 0.55rem;
+      border-radius: 8px;
+      border: 1px solid #1d4ed8;
+      background: #2563eb;
+      color: #fff;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: background 0.1s;
+    }
+
+    .auth-card button[type="submit"]:hover { background: #1d4ed8; }
+    .auth-card button[type="submit"]:active { transform: scale(0.98); }
+    .auth-card button[type="submit"]:disabled { opacity: 0.5; cursor: not-allowed; }
+
+    .auth-footer {
+      text-align: center;
+      margin-top: 1rem;
+      font-size: 0.82rem;
+      color: #6b7280;
+    }
+
+    .auth-footer a { color: #60a5fa; }
+
+    .auth-desc {
+      text-align: center;
+      color: #9ca3af;
+      font-size: 0.9rem;
+      line-height: 1.6;
+    }
+
+    .auth-setup-link {
+      display: inline-block;
+      padding: 0.5rem 1.2rem;
+      border-radius: 8px;
+      background: #2563eb;
+      border: 1px solid #1d4ed8;
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.95rem;
+      transition: background 0.1s;
+    }
+
+    .auth-setup-link:hover { background: #1d4ed8; }
+
+    .auth-center { text-align: center; margin-top: 1.2rem; }
+
     @media (max-width: 640px) {
       .top-nav-inner {
         flex-direction: column;
@@ -166,10 +386,65 @@
       .app-brand {
         font-size: 0.8rem;
       }
+
+      .nav-right {
+        flex-direction: column;
+        gap: 0.5rem;
+      }
+
+      .sync-status { display: none; }
     }
   </style>
 </head>
 <body>
+  <!-- Auth overlay (shown until login succeeds) -->
+  <div id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-brand">
+        <img src="icon.png" alt="">
+        <span>Lazy apps</span>
+      </div>
+
+      <!-- Loading state -->
+      <div id="authLoading">
+        <p class="auth-desc">Loading&hellip;</p>
+      </div>
+
+      <!-- Login form -->
+      <div id="authLogin" hidden>
+        <h2 class="auth-title">Sign in</h2>
+        <form id="loginForm" autocomplete="on">
+          <label for="authUser">Username</label>
+          <input id="authUser" type="text" autocomplete="username" required>
+
+          <label for="authPass">Password</label>
+          <input id="authPass" type="password" autocomplete="current-password" required>
+
+          <div id="authError" class="auth-msg auth-error" hidden></div>
+          <div id="authLockout" class="auth-msg auth-lockout" hidden></div>
+
+          <button type="submit" id="authBtn">Sign in</button>
+        </form>
+
+        <p class="auth-footer">
+          First time? <a href="setup.html">Set up authentication</a>
+        </p>
+      </div>
+
+      <!-- Setup needed -->
+      <div id="authSetupNeeded" hidden>
+        <h2 class="auth-title">Setup required</h2>
+        <p class="auth-desc">
+          Authentication hasn't been configured yet.<br>
+          Run the one-time setup to get started.
+        </p>
+        <div class="auth-center">
+          <a href="setup.html" class="auth-setup-link">Go to setup</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
   <header class="top-nav">
     <div class="top-nav-inner">
       <div class="app-brand">
@@ -177,122 +452,349 @@
         <span>Lazy apps</span>
       </div>
 
-      <div class="tab-group">
-        <button class="tab-button" data-src="apps/timers.html">Timers</button>
-        <button class="tab-button" data-src="apps/notes.html">Notes</button>
-        <button class="tab-button" data-src="page3.html">Page 3</button>
+      <div class="nav-right">
+        <div class="tab-group">
+          <button class="tab-button" data-src="apps/timers.html">Timers</button>
+          <button class="tab-button" data-src="apps/notes.html">Notes</button>
+          <button class="tab-button" data-src="page3.html">Page 3</button>
+        </div>
+
+        <div id="syncControls" class="sync-controls" hidden>
+          <button id="syncBtn" class="sync-btn" type="button" title="Push &amp; pull data to GitHub">&#8597; Sync</button>
+          <label class="sync-auto-label" title="Automatically sync on a timer">
+            <input type="checkbox" id="autoSyncToggle">
+            <span>Auto</span>
+          </label>
+          <select id="syncInterval" class="sync-interval" disabled title="Auto-sync frequency">
+            <option value="5">5 min</option>
+            <option value="15">15 min</option>
+            <option value="30">30 min</option>
+            <option value="60">1 hr</option>
+          </select>
+          <span id="syncStatus" class="sync-status"></span>
+        </div>
+
+        <button id="logoutBtn" class="logout-btn" hidden>Sign out</button>
       </div>
     </div>
   </header>
 
   <main>
-    <!-- Each page has its own iframe, kept loaded all the time -->
-    <iframe
-      class="page-frame"
-      data-src="apps/timers.html"
-      src="apps/timers.html"
-      title="Timers"
-    ></iframe>
-
-    <iframe
-      class="page-frame"
-      data-src="apps/notes.html"
-      src="apps/notes.html"
-      title="Notes"
-    ></iframe>
-
-    <iframe
-      class="page-frame"
-      data-src="page3.html"
-      src="page3.html"
-      title="Page 3"
-    ></iframe>
+    <iframe class="page-frame" data-src="apps/timers.html" title="Timers"></iframe>
+    <iframe class="page-frame" data-src="apps/notes.html" title="Notes"></iframe>
+    <iframe class="page-frame" data-src="page3.html" title="Page 3"></iframe>
   </main>
 
+  <script src="auth.js"></script>
+  <script src="github-sync.js"></script>
   <script>
     const LAST_PAGE_KEY = "lazy_last_page_v1";
 
     const buttons = Array.from(document.querySelectorAll(".tab-button"));
-    const frames = Array.from(document.querySelectorAll(".page-frame"));
+    const pageFrames = Array.from(document.querySelectorAll(".page-frame"));
+
+    let authConfig = null;
+
+    // ---- Tab navigation ----
 
     function setActiveButton(clicked) {
-      buttons.forEach(btn => {
-        btn.classList.toggle("active", btn === clicked);
-      });
+      buttons.forEach(btn => btn.classList.toggle("active", btn === clicked));
     }
 
     function setActiveFrame(src) {
-      frames.forEach(frame => {
-        frame.classList.toggle("active", frame.dataset.src === src);
-      });
+      pageFrames.forEach(f => f.classList.toggle("active", f.dataset.src === src));
     }
 
     function switchToButton(btn) {
       if (!btn) return;
       const src = btn.dataset.src;
       if (!src) return;
-
       setActiveButton(btn);
       setActiveFrame(src);
-
-      try {
-        localStorage.setItem(LAST_PAGE_KEY, src);
-      } catch {
-        // ignore storage errors
-      }
+      try { localStorage.setItem(LAST_PAGE_KEY, src); } catch {}
     }
 
-    // Click handling
-    buttons.forEach(btn => {
-      btn.addEventListener("click", () => {
-        switchToButton(btn);
-      });
-    });
+    buttons.forEach(btn => btn.addEventListener("click", () => switchToButton(btn)));
 
-    // Restore last page on load
-    let storedSrc = null;
-    try {
-      storedSrc = localStorage.getItem(LAST_PAGE_KEY);
-    } catch {
-      storedSrc = null;
-    }
+    // ---- iframe message handling ----
 
-    const initialButton =
-      buttons.find(btn => btn.dataset.src === storedSrc) ||
-      buttons[0];
-
-    switchToButton(initialButton);
-
-    // Listen for alarm state messages from apps/timers.html AND reminder state from apps/notes.html
     window.addEventListener("message", event => {
       const data = event.data;
       if (!data || typeof data !== "object") return;
 
-      // Timers: { source: "timers", type: "alarmState", anyFinished: boolean }
       if (data.source === "timers" && data.type === "alarmState") {
         const timersBtn = buttons.find(btn => btn.dataset.src === "apps/timers.html");
-        if (!timersBtn) return;
-
-        if (data.anyFinished) {
-          timersBtn.classList.add("timer-alert");
-        } else {
-          timersBtn.classList.remove("timer-alert");
-        }
+        if (timersBtn) timersBtn.classList.toggle("timer-alert", !!data.anyFinished);
         return;
       }
 
-      // Notes: { type: "lazy_notes_reminder_state", hasDue: boolean }
       if (data.type === "lazy_notes_reminder_state") {
         const notesBtn = buttons.find(btn => btn.dataset.src === "apps/notes.html");
-        if (!notesBtn) return;
-
-        if (data.hasDue) {
-          notesBtn.classList.add("notes-reminder");
-        } else {
-          notesBtn.classList.remove("notes-reminder");
-        }
+        if (notesBtn) notesBtn.classList.toggle("notes-reminder", !!data.hasDue);
       }
     });
+
+    // ---- Iframe lifecycle ----
+
+    function loadIframes() {
+      pageFrames.forEach(f => {
+        if (!f.getAttribute("src") || f.getAttribute("src") === "about:blank") {
+          f.src = f.dataset.src;
+        }
+      });
+    }
+
+    function unloadIframes() {
+      pageFrames.forEach(f => { f.src = "about:blank"; });
+    }
+
+    function reloadIframes() {
+      pageFrames.forEach(f => {
+        try { f.contentWindow.location.reload(); } catch { f.src = f.dataset.src; }
+      });
+    }
+
+    function restoreLastTab() {
+      let storedSrc = null;
+      try { storedSrc = localStorage.getItem(LAST_PAGE_KEY); } catch {}
+      const btn = buttons.find(b => b.dataset.src === storedSrc) || buttons[0];
+      switchToButton(btn);
+    }
+
+    // ---- Sync controls ----
+
+    const syncBtn = document.getElementById("syncBtn");
+    const autoSyncToggle = document.getElementById("autoSyncToggle");
+    const syncIntervalSel = document.getElementById("syncInterval");
+    const syncStatusEl = document.getElementById("syncStatus");
+
+    let syncStatusTimer = null;
+
+    function updateSyncStatusText() {
+      const t = GitHubSync.getLastSyncTime();
+      if (!t) { syncStatusEl.textContent = ""; return; }
+      const ago = Math.floor((Date.now() - t) / 1000);
+      if (ago < 10) syncStatusEl.textContent = "just now";
+      else if (ago < 60) syncStatusEl.textContent = ago + "s ago";
+      else if (ago < 3600) syncStatusEl.textContent = Math.floor(ago / 60) + "m ago";
+      else syncStatusEl.textContent = Math.floor(ago / 3600) + "h ago";
+    }
+
+    function updateDirtyIndicator() {
+      if (GitHubSync.isSyncing()) return;
+      const dirty = GitHubSync.isDirty();
+      syncBtn.classList.toggle("dirty", dirty);
+      syncBtn.textContent = dirty ? "\u2195 Sync \u2022" : "\u2195 Sync";
+    }
+
+    function startSyncStatusLoop() {
+      clearInterval(syncStatusTimer);
+      syncStatusTimer = setInterval(() => {
+        updateSyncStatusText();
+        updateDirtyIndicator();
+      }, 5000);
+    }
+
+    function stopSyncStatusLoop() {
+      clearInterval(syncStatusTimer);
+    }
+
+    async function handleSyncClick() {
+      syncBtn.disabled = true;
+      syncBtn.textContent = "\u2195 Syncing\u2026";
+      syncBtn.classList.remove("dirty", "success", "error");
+      syncBtn.classList.add("syncing");
+
+      const result = await GitHubSync.sync();
+
+      syncBtn.classList.remove("syncing");
+      syncBtn.disabled = false;
+
+      if (result.status === "success") {
+        syncBtn.textContent = "\u2713 Synced";
+        syncBtn.classList.add("success");
+        if (result.pulled) reloadIframes();
+        setTimeout(() => {
+          syncBtn.classList.remove("success");
+          updateDirtyIndicator();
+        }, 2000);
+      } else if (result.status === "error") {
+        syncBtn.textContent = "\u2717 Error";
+        syncBtn.classList.add("error");
+        syncBtn.title = "Sync failed: " + (result.error || "unknown");
+        setTimeout(() => {
+          syncBtn.classList.remove("error");
+          syncBtn.title = "Push & pull data to GitHub";
+          updateDirtyIndicator();
+        }, 3000);
+      } else {
+        updateDirtyIndicator();
+      }
+
+      updateSyncStatusText();
+    }
+
+    syncBtn.addEventListener("click", handleSyncClick);
+
+    autoSyncToggle.addEventListener("change", () => {
+      if (autoSyncToggle.checked) {
+        syncIntervalSel.disabled = false;
+        GitHubSync.startAutoSync(parseInt(syncIntervalSel.value));
+      } else {
+        syncIntervalSel.disabled = true;
+        GitHubSync.stopAutoSync();
+      }
+    });
+
+    syncIntervalSel.addEventListener("change", () => {
+      if (autoSyncToggle.checked) {
+        GitHubSync.startAutoSync(parseInt(syncIntervalSel.value));
+      }
+    });
+
+    // ---- Auth flow ----
+
+    async function onAuthSuccess(session) {
+      GitHubSync.init(session);
+      GitHubSync.onPull(() => reloadIframes());
+
+      try { await GitHubSync.pull(); } catch {}
+
+      restoreLastTab();
+      loadIframes();
+
+      document.getElementById("authOverlay").classList.add("hidden");
+      document.getElementById("logoutBtn").hidden = false;
+
+      // Show sync controls and restore saved settings
+      document.getElementById("syncControls").hidden = false;
+      const syncSettings = GitHubSync.loadSettings();
+      if (syncSettings.autoSync && syncSettings.intervalMinutes) {
+        autoSyncToggle.checked = true;
+        syncIntervalSel.value = String(syncSettings.intervalMinutes);
+        syncIntervalSel.disabled = false;
+        GitHubSync.startAutoSync(syncSettings.intervalMinutes);
+      }
+
+      GitHubSync.enableBeforeUnload();
+      startSyncStatusLoop();
+      updateDirtyIndicator();
+    }
+
+    function logout() {
+      GitHubSync.stopAutoSync();
+      stopSyncStatusLoop();
+      Auth.clearSession();
+      unloadIframes();
+
+      document.getElementById("authOverlay").classList.remove("hidden");
+      document.getElementById("authLogin").hidden = false;
+      document.getElementById("authLoading").hidden = true;
+      document.getElementById("authSetupNeeded").hidden = true;
+      document.getElementById("authError").hidden = true;
+      document.getElementById("authLockout").hidden = true;
+      document.getElementById("authBtn").disabled = false;
+      document.getElementById("authBtn").textContent = "Sign in";
+      document.getElementById("authUser").value = "";
+      document.getElementById("authPass").value = "";
+      document.getElementById("logoutBtn").hidden = true;
+
+      document.getElementById("syncControls").hidden = true;
+      autoSyncToggle.checked = false;
+      syncIntervalSel.disabled = true;
+      syncStatusEl.textContent = "";
+
+      updateLockoutUI();
+    }
+
+    // ---- Rate-limit countdown ----
+
+    let lockoutTimer = null;
+
+    function updateLockoutUI() {
+      const rate = Auth.checkRateLimit();
+      const lockoutEl = document.getElementById("authLockout");
+      const btn = document.getElementById("authBtn");
+      const userIn = document.getElementById("authUser");
+      const passIn = document.getElementById("authPass");
+
+      clearTimeout(lockoutTimer);
+
+      if (!rate.allowed) {
+        lockoutEl.hidden = false;
+        lockoutEl.textContent = "Locked out. Try again in " + Auth.formatTime(rate.lockoutRemaining) + ".";
+        btn.disabled = true;
+        userIn.disabled = true;
+        passIn.disabled = true;
+        lockoutTimer = setTimeout(updateLockoutUI, 1000);
+      } else {
+        lockoutEl.hidden = true;
+        btn.disabled = false;
+        userIn.disabled = false;
+        passIn.disabled = false;
+      }
+    }
+
+    // ---- Login form handler ----
+
+    document.getElementById("loginForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+
+      const errorEl = document.getElementById("authError");
+      const btn = document.getElementById("authBtn");
+      errorEl.hidden = true;
+
+      btn.disabled = true;
+      btn.textContent = "Signing in\u2026";
+
+      const username = document.getElementById("authUser").value.trim();
+      const password = document.getElementById("authPass").value;
+
+      const result = await Auth.login(username, password, authConfig);
+
+      if (result.success) {
+        btn.textContent = "Syncing\u2026";
+        const session = Auth.getSession();
+        await onAuthSuccess(session);
+      } else {
+        errorEl.hidden = false;
+        errorEl.textContent = result.error;
+        btn.disabled = false;
+        btn.textContent = "Sign in";
+        if (result.locked) updateLockoutUI();
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", logout);
+
+    // ---- Initialization ----
+
+    (async () => {
+      const loadingEl = document.getElementById("authLoading");
+      const loginEl = document.getElementById("authLogin");
+      const setupEl = document.getElementById("authSetupNeeded");
+
+      try {
+        const res = await fetch("auth-config.json?_=" + Date.now());
+        if (!res.ok) throw new Error("not found");
+        authConfig = await res.json();
+      } catch {
+        loadingEl.hidden = true;
+        setupEl.hidden = false;
+        return;
+      }
+
+      const session = Auth.getSession();
+      if (session && session.token) {
+        loadingEl.hidden = true;
+        await onAuthSuccess(session);
+        return;
+      }
+
+      loadingEl.hidden = true;
+      loginEl.hidden = false;
+      updateLockoutUI();
+    })();
   </script>
 </body>
 </html>
