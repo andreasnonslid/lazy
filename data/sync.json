@@ -1,7 +1,58 @@
 {
   "version": 1,
-  "lastSync": 1772491248116,
+  "lastSync": 1772555870628,
   "data": {
-    "lazy_last_page_v1": "apps/backup.html"
+    "infinite_timers_v1": [
+      {
+        "id": "mmatxmdm260809a151f798",
+        "name": "Weekly non-AutoCase work",
+        "durationSec": 7200,
+        "remainingSec": 1798,
+        "isRunning": false
+      },
+      {
+        "id": "mmatxt72b38ffa0d4625f",
+        "name": "Weekly learning",
+        "durationSec": 7200,
+        "remainingSec": 7200,
+        "isRunning": false
+      },
+      {
+        "id": "mmaty12e6b7f3ffdf10d78",
+        "name": "10 min generic",
+        "durationSec": 600,
+        "remainingSec": 600,
+        "isRunning": false
+      },
+      {
+        "id": "mmatya5j8ae0fea420ae68",
+        "name": "1 min generic",
+        "durationSec": 60,
+        "remainingSec": 60,
+        "isRunning": false
+      },
+      {
+        "id": "mmatyjtu83cf52c4a1c6e",
+        "name": "dump2",
+        "durationSec": 135000,
+        "remainingSec": 19357,
+        "isRunning": false
+      },
+      {
+        "id": "mmatyt0b996a03208b57e8",
+        "name": "Meetings this week",
+        "durationSec": 36000,
+        "remainingSec": 36000,
+        "isRunning": false
+      }
+    ],
+    "infinite_timers_settings_v1": {
+      "soundEnabled": true,
+      "compactEnabled": true
+    },
+    "lazy_notes_settings_v1": {
+      "compactEnabled": true
+    },
+    "lazy_last_page_v1": "apps/timers.html"
   }
 }
