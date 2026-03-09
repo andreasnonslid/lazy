@@ -1,6 +1,6 @@
 {
   "version": 1,
-  "lastSync": 1772555870628,
+  "lastSync": 1773063409307,
   "data": {
     "infinite_timers_v1": [
       {
@@ -35,8 +35,8 @@
         "id": "mmatyjtu83cf52c4a1c6e",
         "name": "dump2",
         "durationSec": 135000,
-        "remainingSec": 19357,
-        "isRunning": false
+        "remainingSec": 17985,
+        "isRunning": true
       },
       {
         "id": "mmatyt0b996a03208b57e8",
